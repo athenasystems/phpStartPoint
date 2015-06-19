@@ -62,6 +62,7 @@ if ( $ans eq 'y' ) {
 	my $mysqlRootDbPwd = <STDIN>;
 	ReadMode 1;
 	chomp $mysqlRootDbPwd;
+	print "\n";
 	&makeDB($mysqlRootDbPwd);
 }
 else {
