@@ -26,6 +26,10 @@ if [ -f /etc/debian_version ]; then
 platform='debian'
 fi
 
+if [ -f /etc/SUSE-brand ]; then
+platform='suse'
+fi
+
 
 unamestr=`uname`
 regex='BSD'
@@ -45,6 +49,19 @@ echo "Setting up phpStartPoint to create PHP classes and web interfaces ... "
 echo $spacer
 echo "Checking your OS and environment"
 echo OS is $platform
+
+if [[ $platform == 'suse' ]]; then
+
+	echo $spacer
+	echo "Install any missing stuff? Y/n:"	
+	read -s -n 1 ans
+	if [ "$ans" = "" ]; then 
+		ans=y
+	fi 	
+	if [ "$ans" = "y" ]; then 
+		aptitude -y install mysql-community-server php5 php5-mysql apache2 apache2-mod_php5 perl-DBI perl-Term-ReadKey
+	fi				    
+fi
 
 if [[ $platform == 'debian' ]]; then
 
