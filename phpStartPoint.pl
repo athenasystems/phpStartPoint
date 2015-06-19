@@ -128,7 +128,21 @@ my $allPHPClasses = '';
 my $phpOutTxtFull = '';
 my $htmlIndex     = '';
 my $outFormatsTxt = '';
-my $navHTML = '';
+my $navHTML = '
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">phpStartPoint</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">';
 
 print "\n$spacer\nRunning phpStartPoint on the $db database...\n$spacer\n";
 
@@ -144,7 +158,7 @@ while ( my @row_array = $sth->fetchrow_array ) {
 	my $bindValues       = "\n\ \$" . $table . "Formats= array(\n";
 	my $capTableName     = ucfirst($table);
 $navHTML .=<<EOF;
-<a href="/$table">$capTableName</a> | 
+<li><a href="/$table">$capTableName</a></li> 
 EOF
 
 	my $classHeader = "
@@ -520,13 +534,21 @@ close(FH);
 $navHTML=~s/ \| $//s;
 
 $navHTML =<<EOF;
-<div>$navHTML</div>
+$navHTML
+</ul></div>
+</div></nav>
 EOF
+
+my $bootstrap = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>';
+
 
 print "$spacer\nCreating headers and footers for the web pages $dir/inc\n";
 open( FH, ">$dir/inc/header.php" );
 print FH '<!DOCTYPE html><html><head><meta charset="UTF-8">
 <title></title>
+'.$bootstrap.'
 </head><body>' . $navHTML;
 close(FH);
 
