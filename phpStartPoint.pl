@@ -9,18 +9,46 @@ my $domain = '';
 my $host   = 'localhost';
 ###########################################################
 use DBI;
-use Cwd;
-my $dir = getcwd;
+use Term::ReadKey;
+my $dir = $ENV{"HOME"} . '/phpstartpoint';
+my $user = (defined($ENV{"SUDO_USER"})) ? $ENV{"SUDO_USER"} : $ENV{"USER"}  ;
 
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
 print "$spacer\n\nRunning ... php Start Point\n\n$spacer\n\n";
+my $ans = '';
+
+# Get folder
+print "Where shall I save the php files?\n($dir): ";
+ReadMode 1;
+$dir = <STDIN>;
+chomp $dir;
+
+if ((!defined($dir) )||( $dir eq '' )) {
+	$dir = $ENV{"HOME"} . '/phpstartpoint';
+}
+
+if ( -e $dir ) {
+	print "Warning: Everything in the folder will be deleted OK?\n(Y/n): ";
+	ReadMode 4;
+	my $confirm = '';
+	while ( not defined( $confirm = ReadKey(-1) ) ) { }
+	chomp $confirm;
+	if ( $confirm eq '' ) { $confirm = 'y' }
+	if ( $confirm eq 'n' ) {
+		print "OK quitting ...\n";
+	}
+	
+
+}
 
 # Import Example DB
-print "Would you like to install an example database and create PHP files from it?\ny/N: ";
-my $ans = <STDIN>;
+print "Would you like to install an example database to create PHP files from?\ny/N: ";
+ReadMode 4;
+while ( not defined( $ans = ReadKey(-1) ) ) { }
+ReadMode 1;
 chomp $ans;
-
+print "\n\n";
 if ( $ans eq 'y' ) {
 	$db     = 'phpstartpoint';
 	$dbpw   = 'PHPSPPWD';
@@ -30,7 +58,9 @@ if ( $ans eq 'y' ) {
 
 	# Get MySQL Root password
 	print "Type in the MySQL Root Password\n:";
+	ReadMode 4;
 	my $mysqlRootDbPwd = <STDIN>;
+	ReadMode 1;
 	chomp $mysqlRootDbPwd;
 	&makeDB($mysqlRootDbPwd);
 }
@@ -38,8 +68,6 @@ else {
 	if ( $db     eq '' ) { $db     = &getDBName(); }
 	if ( $dbuser eq '' ) { $dbuser = &getDBUser(); }
 	if ( $dbpw   eq '' ) { $dbpw   = &getDBPwd(); }
-	if ( $domain eq '' ) { $domain = &getDomain(); }
-
 }
 
 print "$spacer\n\n";
@@ -48,13 +76,17 @@ my $doApace = '';
 &setupApache;
 
 if ( -e "$dir/etc" ) {
+
 	# Clearing any previously made scripts
-	system("rm -rf inc lib www etc");
+	system("rm -rf $dir");
 }
-mkdir('etc');
-mkdir('inc');
-mkdir('lib');
-mkdir('www');
+
+mkdir( $dir );
+mkdir( $dir . '/etc' );
+mkdir( $dir . '/inc' );
+mkdir( $dir . '/lib' );
+mkdir( $dir . '/www' );
+system("chown -R $user:$user $dir");
 
 ## SQL query to get Table names from DB
 my $query   = "show tables";
@@ -83,7 +115,7 @@ my $goFuncStart = 'if ((isset($_GET[\'go\'])) && ($_GET[\'go\'] == "y")) {';
 my $goFuncEnd   = '}';
 
 my $credConf = "db=$db\ndbpw=$dbpw\ndbuser=$dbuser\nhost=$host";
-open( FH, ">etc/db.conf" );
+open( FH, ">$dir/etc/db.conf" );
 print FH $credConf;
 close(FH);
 
@@ -92,6 +124,8 @@ my $allPHPClasses = '';
 my $phpOutTxtFull = '';
 my $htmlIndex     = '';
 my $outFormatsTxt = '';
+
+print "\n$spacer\nRunning phpStartPoint on the $db database...\n$spacer\n";
 
 # Loop the Tables
 while ( my @row_array = $sth->fetchrow_array ) {
@@ -114,7 +148,7 @@ class $capTableName
 	print "Processing the $table table ... ";
 
 	# Make the folder for the PHP pages for this Table
-	mkdir( 'www/' . $table );
+	mkdir( $dir . '/www/' . $table );
 
 	my $sqltext = "SELECT * FROM $table WHERE 1=0";
 	my $sth     = $dbh->prepare($sqltext);
@@ -335,23 +369,23 @@ if (! empty($res)) {
 
 	print "creating web pages ";
 
-	open( FH, ">www/$table/index.php" );
+	open( FH, ">$dir/www/$table/index.php" );
 	print FH $htmlHead . $htmlAdd . $htmlListBody . $htmlFoot;
 	close(FH);
 
-	open( FH, ">www/$table/view.php" );
+	open( FH, ">$dir/www/$table/view.php" );
 	print FH $htmlHead . $htmlViewBody . $htmlFoot;
 	close(FH);
 
-	open( FH, ">www/$table/add.php" );
+	open( FH, ">$dir/www/$table/add.php" );
 	print FH $htmlAddHead . $formTagStart . $phpOutTxt . $formTagEnd . $htmlFoot;
 	close(FH);
 
-	open( FH, ">www/$table/edit.php" );
+	open( FH, ">$dir/www/$table/edit.php" );
 	print FH $htmlEditHead . $formEditTagStart . $phpEditOutTxt . $formTagEnd . $htmlFoot;
 	close(FH);
 
-	open( FH, ">www/$table/delete.php" );
+	open( FH, ">$dir/www/$table/delete.php" );
 	print FH $htmlDeleteHead . $htmlViewBody . $formEditTagStart . $phpDeleteOutTxt . $formTagEnd . $htmlFoot;
 	close(FH);
 
@@ -464,7 +498,7 @@ EOF
 	  . $deleteFromDBFunction . '}';
 
 	print "& PHP Class\n";
-	open( FH, ">lib/$capTableName.php" );
+	open( FH, ">$dir/lib/$capTableName.php" );
 	print FH '<?php' . $phpClass . "
 
 ?>";
@@ -472,7 +506,7 @@ EOF
 
 	$outFormatsTxt .= $bindValues;
 }
-open( FH, ">lib/Classes.php" );
+open( FH, ">$dir/lib/Classes.php" );
 print FH '<?php' . $allPHPClasses . "
 
 $outFormatsTxt
@@ -481,13 +515,13 @@ $outFormatsTxt
 close(FH);
 
 print "$spacer\nCreating headers and footers for the web pages $dir/inc\n";
-open( FH, ">inc/header.php" );
+open( FH, ">$dir/inc/header.php" );
 print FH '<!DOCTYPE html><html><head><meta charset="UTF-8">
 <title></title>
 </head><body>';
 close(FH);
 
-open( FH, ">inc/footer.php" );
+open( FH, ">$dir/inc/footer.php" );
 print FH '</body></html>';
 close(FH);
 
@@ -501,6 +535,8 @@ $sth->finish;
 # Write out the DB Class file
 &makeDBClass();
 
+system("chown -R $user:$user $dir");
+
 print "Credentials file is stored at $dir/etc/db.conf\n\n";
 print "PHP Classes files are stored at $dir/lib\n\n";
 print "Web pages are stored at $dir/www\n\n";
@@ -508,6 +544,8 @@ if ( $doApace eq 'y' ) {
 	print "The Apache web root is $dir/www\n\n";
 	print "Go to http://$domain in a brower\n\n";
 }
+
+
 
 exit;
 
@@ -529,9 +567,12 @@ sub getDBUser {
 
 sub getDBPwd {
 	print "Enter the password to connect to the database (PHPSPPWD): ";
+	ReadMode 2;
 	my $ans = <STDIN>;
+	ReadMode 1;
 	chomp $ans;
 	if ( $ans eq '' ) { $ans = 'PHPSPPWD' }
+	print "\n";
 	return $ans;
 }
 
@@ -547,9 +588,13 @@ sub setupApache {
 	my $apacheInstalled = `dpkg --get-selections | grep apache`;
 	if ( $apacheInstalled =~ /install/s ) {
 
-		print "Would you like to setup the Apache web server on this computer\nfor the development domain http://$domain? \ny/N: ";
-		$doApace = <STDIN>;
+		print "Would you like to add a dummy domain to the Apache Web Server\n";
+		print "on this computer for you to view the php pages?\ny/N: ";
+		ReadMode 4;
+		while ( not defined( $doApace = ReadKey(-1) ) ) { }
+		ReadMode 1;
 		chomp $doApace;
+		print "\n";
 
 		if ( $doApace eq 'y' ) {
 			my $user = $>;
@@ -557,6 +602,7 @@ sub setupApache {
 				print "\nGotta be root!\n\nTry sudo ./phpStartPoint.pl\n\n";
 				exit;
 			}
+			if ( $domain eq '' ) { $domain = &getDomain(); }
 
 			# Write out the Apache2 Conf file
 			&makeApacheConf();
@@ -980,9 +1026,9 @@ if (! class_exists('DB')) {
 ?>
 ^;
 
-$dbclassFile =~ s/THISDIR/$dir/s;
+	$dbclassFile =~ s/THISDIR/$dir/s;
 
-	open( FH, ">lib/DB.php" );
+	open( FH, ">$dir/lib/DB.php" );
 	print FH $dbclassFile;
 	close(FH);
 

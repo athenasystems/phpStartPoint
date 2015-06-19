@@ -38,17 +38,85 @@ if [[ $platform == 'freebsd' ]]; then
 fi
 
 
-spacer="---------------------------------------------------------------"
+spacer="---------------------------------------------------------------\n"
 echo $spacer
 echo "Setting up phpStartPoint to create PHP classes and web interfaces ... "
 echo $spacer
-
 echo "Checking your OS and environment"
+echo OS is $platform
 
 if [[ $platform == 'debian' ]]; then
 
-	req1=y
-	req2=y
+	if which php < /dev/null > /dev/null 2>&1  ; then
+		echo "PHP is installed"
+	else
+		echo $spacer
+		echo "PHP does not appear to be installed. Would you like to install it now? y/n:"	
+		read -s -n 1 ans
+		if [ "$ans" = "" ]; then 
+			ans=y
+		fi 	
+	    if [ "$ans" = "y" ]; then 
+				    
+			if [ "$(id -u)" != "0" ]; then
+			   echo "This script must be run as root" 1>&2
+			   exit 1
+			fi
+			apt-get -y install php5
+		else
+		echo "Ok ... skipping"
+		fi
+	fi
+	
+	
+	if which mysqld < /dev/null > /dev/null 2>&1  ; then
+		echo "MySQL server is installed"
+	else
+		echo $spacer
+		echo "MySQL server does not appear to be installed. Would you like to install it now? Y/n:"	
+		read -s -n 1 ans
+		if [ "$ans" = "" ]; then 
+			ans=y
+		fi 	
+	
+	    if [ "$ans" = "y" ]; then 
+				    
+			if [ "$(id -u)" != "0" ]; then
+			   echo "This script must be run as root" 1>&2
+			   exit 1
+			fi
+			apt-get -y install mysql-server php5-mysqlnd
+		else
+		echo "Ok ... skipping"
+		fi
+	fi
+	
+	
+
+	if [ -f /usr/sbin/apache2 ]
+	then echo "Apache2 is installed"
+	else
+		echo $spacer
+		echo "Apache2 does not appear to be installed. Would you like to install it now? Y/n:"	
+		read -s -n 1 ans
+		if [ "$ans" = "" ]; then 
+			ans=y
+		fi 	
+	
+	    if [ "$ans" = "y" ]; then 
+				    
+			if [ "$(id -u)" != "0" ]; then
+			   echo "This script must be run as root" 1>&2
+			   exit 1
+			fi
+			apt-get -y install apache2 libapache2-mod-php5  libapache2-mod-auth-mysql
+		else
+		echo "Ok ... skipping"
+		fi
+	fi
+
+	req1=''
+	req2=''
 
 	if perl -e 'use DBI;' < /dev/null > /dev/null 2>&1  ; then
 		echo Perl DBI module installed
@@ -62,10 +130,11 @@ if [[ $platform == 'debian' ]]; then
 		req2=libterm-readkey-perl
 	fi
 	
-	if [[ $req1 != 'y' ]] || [[ $req2 != 'y'  ]] ; then
+	if [[ $req1 != '' ]] || [[ $req2 != ''  ]] ; then
+		echo $spacer
 		echo Dang! ... need some perl modules installed i.e. $req1 $req2
 		echo Shall I install them now? Y/n
-		read -n 1 ans
+		read -s -n 1 ans
 		if [ "$ans" = "" ]; then 
 			ans=y
 		fi 
@@ -77,27 +146,6 @@ if [[ $platform == 'debian' ]]; then
 			fi
 			apt-get -y install $req1 $req2
 		fi 
-	fi
-	
-	
-	
-
-	if [ -f /usr/sbin/apache2 ]
-	then echo "Apache2 is installed"
-	else
-		echo "Apache2 does not appear to be installed. Would you like to install it now? y/n:"	
-		read -n 1 ans
-	
-	    if [ "$ans" = "y" ]; then 
-				    
-			if [ "$(id -u)" != "0" ]; then
-			   echo "This script must be run as root" 1>&2
-			   exit 1
-			fi
-			apt-get -y install libterm-readkey-perl libdbi-perl apache2 mysql-server php5 libapache2-mod-php5  libapache2-mod-auth-mysql expect libcrypt-ssleay-perl libexpect-perl php5-mysqlnd
-		else
-		echo "Ok ... skipping"
-		fi
 	fi
 fi
 
@@ -120,15 +168,16 @@ fi
 
 
 echo $spacer
-echo -n "OK, going to grab the setup script from the web"
-echo " and continue the installation... "
-echo "That cool? y/n:"
+echo "OK, going to grab the phpStartPoint script"
+echo "from the web and then run it ... That cool? Y/n: "
 echo $spacer
 
-read -n 1 resp
-
+read -s -n 1 resp
+if [ "$resp" = "" ]; then
+	resp=y
+fi
 if [ "$resp" = "y" ]; then
-	wget http://sc21.co/phpStartPoint
+	wget -N http://sc21.co/phpStartPoint
 	chmod 755 phpStartPoint
 	perl ./phpStartPoint
 else
