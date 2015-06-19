@@ -14,7 +14,7 @@ host=localhost
 
 This creates a way to not have usernames and passwords in your code, and if you chown yourusername:www-data and chmod 660, it will protect it from being read by normal users, but still be accesible by you and the Apache2 user.
 
-Secondly run the script by typing "perl mkClassesFromDB.pl" at the command line.
+Secondly run the script by typing "perl phpStartPoint.pl" at the command line.
 
 The script will create a folders 'inc', 'lib' and 'www'. 
 

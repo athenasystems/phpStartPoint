@@ -20,52 +20,52 @@ if [[ "$unamestr" =~ 'FreeBSD' ]]; then
    platform='freebsd'
 fi
 
-
-if [[ $platform == 'debian' ]]; then
-   echo "Platform is: debian"
-elif [[ $platform == 'redhat' ]]; then
-  echo "Platform is: redhat"
-elif [[ $platform == 'freebsd' ]]; then
-  echo "Platform is: freebsd"
-  
+if [[ $platform == 'freebsd' ]]; then
+  echo "Platform is: freebsd"  
 fi
-
-exit 1
 
 
 spacer="---------------------------------------------------------------"
 echo $spacer
-echo "Hi, going to use phpStartPoint to create PHP classes and web interfaces ... "
+echo "Setting up phpStartPoint to create PHP classes and web interfaces ... "
 echo $spacer
 
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
-fi
-
-if [ -f /usr/sbin/apache25 ]
-then echo "Apache2 is installed"
-else
-	echo "Apache2 does not appear to be installed. Would you like to install it now? y/n:"	
-	read -n 1 ans
-
-    if [ "$ans" = "y" ]; then 
-		apt-get -y install libterm-readkey-perl libdbi-perl apache2 mysql-server php5 libapache2-mod-php5  libapache2-mod-auth-mysql expect libcrypt-ssleay-perl libexpect-perl php5-mysqlnd
+if [[ $platform == 'debian' ]]; then
+	if [ -f /usr/sbin/apache2 ]
+	then echo "Apache2 is installed"
 	else
-	echo "Ok ... skipping"
+		echo "Apache2 does not appear to be installed. Would you like to install it now? y/n:"	
+		read -n 1 ans
+	
+	    if [ "$ans" = "y" ]; then 
+				    
+			if [ "$(id -u)" != "0" ]; then
+			   echo "This script must be run as root" 1>&2
+			   exit 1
+			fi
+			apt-get -y install libterm-readkey-perl libdbi-perl apache2 mysql-server php5 libapache2-mod-php5  libapache2-mod-auth-mysql expect libcrypt-ssleay-perl libexpect-perl php5-mysqlnd
+		else
+		echo "Ok ... skipping"
+		fi
 	fi
 fi
 
+if [[ $platform == 'redhat' ]]; then
 
-yum install httpd
-service httpd start
-yum install mysql mysql-server
-service mysqld start
-yum install php php-mysql
-chkconfig httpd on
-chkconfig mysqld on
-service httpd restart
-
+	if [ "$(id -u)" != "0" ]; then
+	   echo "This script must be run as root" 1>&2
+	   exit 1
+	fi
+	
+	yum install httpd
+	service httpd start
+	yum install mysql mysql-server
+	service mysqld start
+	yum install php php-mysql
+	chkconfig httpd on
+	chkconfig mysqld on
+	service httpd restart
+fi
 
 
 echo $spacer

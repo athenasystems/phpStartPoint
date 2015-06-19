@@ -2,28 +2,31 @@
 use strict;
 ###########################################################
 # Edit this section to reflect your MySQL database details
-# Read in DB credentials from a conf file
-my $db     = 'phpstartpoint';
-my $dbpw   = 'PHPSPPWD';
-my $dbuser = 'athena';
+my $db     = '';
+my $dbpw   = '';
+my $dbuser = '';
+my $domain = '';
 my $host   = 'localhost';
-my $domain = 'dev.phpstartpoint.com';
 ###########################################################
 use DBI;
 use Cwd;
-
 my $dir = getcwd;
 
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
-print "$spacer\n\nphpStart Point\n\n$spacer\n\n";
+print "$spacer\n\nRunning ... php Start Point\n\n$spacer\n\n";
 
 # Import Example DB
-print "Would you like to install an example database?\ny/N: ";
+print "Would you like to install an example database and create PHP files from it?\ny/N: ";
 my $ans = <STDIN>;
 chomp $ans;
 
 if ( $ans eq 'y' ) {
+	$db     = 'phpstartpoint';
+	$dbpw   = 'PHPSPPWD';
+	$dbuser = 'athena';
+	$host   = 'localhost';
+	$domain = 'dev.phpstartpoint.com';
 
 	# Get MySQL Root password
 	print "Type in the MySQL Root Password\n:";
@@ -31,34 +34,21 @@ if ( $ans eq 'y' ) {
 	chomp $mysqlRootDbPwd;
 	&makeDB($mysqlRootDbPwd);
 }
+else {
+	if ( $db     eq '' ) { $db     = &getDBName(); }
+	if ( $dbuser eq '' ) { $dbuser = &getDBUser(); }
+	if ( $dbpw   eq '' ) { $dbpw   = &getDBPwd(); }
+	if ( $domain eq '' ) { $domain = &getDomain(); }
+
+}
 
 print "$spacer\n\n";
 
 my $doApace = '';
+&setupApache;
 
-my $apacheInstalled = `dpkg --get-selections | grep apache`;
-if ( $apacheInstalled =~ /install/s ) {
-
-	print "Would you like to setup the Apache web server on this computer\nfor the development domain http://$domain? \ny/N: ";
-	$doApace = <STDIN>;
-	chomp $doApace;
-
-	if ( $doApace eq 'y' ) {
-		my $user = $>;
-		if ($user) {
-			print "\nGotta be root!\n\nTry sudo ./phpStartPoint.pl\n\n";
-			exit;
-		}
-
-		# Write out the Apache2 Conf file
-		&makeApacheConf();
-
-	}
-}
 if ( -e "$dir/etc" ) {
-	print "Clearing any previously made scripts\n";
-
-	# Clear and make folders
+	# Clearing any previously made scripts
 	system("rm -rf inc lib www etc");
 }
 mkdir('etc');
@@ -98,8 +88,7 @@ print FH $credConf;
 close(FH);
 
 # Strings to use for concatenation in the Table and Column loops
-my $outTxt        = '';
-my $outTxtFull    = '';
+my $allPHPClasses = '';
 my $phpOutTxtFull = '';
 my $htmlIndex     = '';
 my $outFormatsTxt = '';
@@ -107,18 +96,18 @@ my $outFormatsTxt = '';
 # Loop the Tables
 while ( my @row_array = $sth->fetchrow_array ) {
 
-	my $outTxtVars           = '';
-	my $outTxtGetsAndSets    = '';
-	my $phpOutTxt            = '';
-	my $phpEditOutTxt        = '';
-	my $phpDeleteOutTxt      = '<h2>Please confirm you wish to delete this item</h2>';
-	my $table                = $row_array[0];
-	my $outTxtFormatStatics  = "\n\ \$" . $table . "Formats= array(\n";
-	my $capitalisedTableName = ucfirst($table);
+	my $privateVariables = '';
+	my $getsAndSets      = '';
+	my $phpOutTxt        = '';
+	my $phpEditOutTxt    = '';
+	my $phpDeleteOutTxt  = '<h2>Please confirm you wish to delete this item</h2>';
+	my $table            = $row_array[0];
+	my $bindValues       = "\n\ \$" . $table . "Formats= array(\n";
+	my $capTableName     = ucfirst($table);
 
-	my $outTxtClassTop = "
+	my $classHeader = "
 	
-class $capitalisedTableName
+class $capTableName
 {
 ";
 
@@ -141,7 +130,7 @@ class $capitalisedTableName
 	my $indexCount       = 1;
 	my $indexFeildType   = '';
 	my $getAllTxt        = '';
-	my $outTxtGetAllTxt  = '';
+	my $getAllFunction   = '';
 	my $outAddFieldsTxt  = '';
 	my $outEditFieldsTxt = '';
 
@@ -176,16 +165,16 @@ class $capitalisedTableName
 
 		}
 
-		$outTxtVars .= 'private $' . $field . ";\n";
+		$privateVariables .= 'private $' . $field . ";\n";
 
 		my $t = &getType( $table, $field );
 
 		#private static
-		$outTxtFormatStatics .= "\"$field\" => \"$t\"," . "\n";
+		$bindValues .= "\"$field\" => \"$t\"," . "\n";
 
 		$loadFromDB .= "\t\t" . '$this->set' . $capField . '($r->' . $field . ')' . ";\n";
 
-		$outTxtGetsAndSets .= '		
+		$getsAndSets .= '		
 	public function set' . $capField . '($' . $field . ')
 	{
 		$this->' . $field . ' = $' . $field . ';
@@ -202,7 +191,7 @@ class $capitalisedTableName
 	my $htmlHead = '<?php	
 include "../../lib/DB.php";
 $db = new DB();
-include "../../lib/' . $capitalisedTableName . '.php";
+include "../../lib/' . $capTableName . '.php";
 include "../../inc/header.php"; 
  
 
@@ -211,13 +200,13 @@ include "../../inc/header.php";
 	my $htmlAddHead = '<?php	
 include "../../lib/DB.php";
 $db = new DB();
-include "../../lib/' . $capitalisedTableName . '.php"; 
+include "../../lib/' . $capTableName . '.php"; 
  
 
 ' . $goFuncStart . '
 
 	# Insert into DB
-	$' . $table . 'New = new ' . $capitalisedTableName . '();
+	$' . $table . 'New = new ' . $capTableName . '();
 ' . $outAddFieldsTxt . '
 	$' . $table . 'New->insertIntoDB();
 		
@@ -230,11 +219,11 @@ include "../../inc/header.php";
 	my $htmlEditHead = '<?php	
 include "../../lib/DB.php";
 $db = new DB();
-include "../../lib/' . $capitalisedTableName . '.php";
+include "../../lib/' . $capTableName . '.php";
 ' . $goFuncStart . '
 
 	# Update DB
-	$' . $table . 'Update = new ' . $capitalisedTableName . '();
+	$' . $table . 'Update = new ' . $capTableName . '();
 
 ' . $outEditFieldsTxt . '
 	$' . $table . 'Update->updateDB();
@@ -242,10 +231,10 @@ include "../../lib/' . $capitalisedTableName . '.php";
 include "../../inc/header.php";
 
 
-$' . $table . ' = new ' . $capitalisedTableName . '();
+$' . $table . ' = new ' . $capTableName . '();
 // Load DB data into object
 $' . $table . '->set' . $capindexCol . '($_GET[\'id\']);
-$' . $table . '->load' . $capitalisedTableName . '();
+$' . $table . '->load' . $capTableName . '();
 $all = $' . $table . '->getAll();
 
 
@@ -254,10 +243,10 @@ $all = $' . $table . '->getAll();
 	my $htmlDeleteHead = '<?php	
 include "../../lib/DB.php";
 $db = new DB();
-include "../../lib/' . $capitalisedTableName . '.php";
+include "../../lib/' . $capTableName . '.php";
 ' . $goFuncStart . '
 
-	$' . $table . 'Delete = new ' . $capitalisedTableName . '();
+	$' . $table . 'Delete = new ' . $capTableName . '();
 	$' . $table . 'Delete->set' . $capindexCol . '($_GET[\'id\']);
 	$' . $table . 'Delete->deleteFromDB();
 	
@@ -270,10 +259,10 @@ include "../../inc/header.php";
 ';
 
 	my $htmlViewBody = '<?php
-$' . $table . ' = new ' . $capitalisedTableName . '();
+$' . $table . ' = new ' . $capTableName . '();
 // Load DB data into object
 $' . $table . '->set' . $capindexCol . '($_GET[\'id\']);
-$' . $table . '->load' . $capitalisedTableName . '();
+$' . $table . '->load' . $capTableName . '();
 $all = $' . $table . '->getAll();
 
 if (isset($all)) {
@@ -334,7 +323,7 @@ if (! empty($res)) {
 ?>
 ';
 	$getAllTxt =~ s/,\n$//;
-	$outTxtGetAllTxt .= '
+	$getAllFunction .= '
 	public function getAll()
 	{
 		$ret = array(' . "\n" . $getAllTxt . ');
@@ -373,11 +362,11 @@ EOF
 
 	my $colList = join( ',', @cols );
 
-	my $loadFunc = '
-	public function load' . $capitalisedTableName . '() {
+	my $loadFunction = '
+	public function load' . $capTableName . '() {
 		global $db;
 		if(!isset($this->' . $indexFeild . ')){
-			return "No ' . $capitalisedTableName . ' ID";
+			return "No ' . $capTableName . ' ID";
 		}		
     	$res = $db->select(\'SELECT ' 
 	  . $colList 
@@ -393,7 +382,7 @@ EOF
 	}
 ';
 
-	my $saveToDB = '
+	my $saveToDBFunction = '
 
 	public function updateDB() {
 		global $db;
@@ -415,7 +404,7 @@ EOF
 
 ';
 
-	my $insertToDB = '
+	my $insertToDBFunction = '
 
 	public function insertIntoDB() {
 		global $db;
@@ -434,14 +423,14 @@ EOF
 	}
 ';
 
-	my $deleteFromDB = '
+	my $deleteFromDBFunction = '
 
 	 public function deleteFromDB() {
 
         global $db;
         
         if(!isset($this->' . $indexFeild . ')){
-			return "No ' . $capitalisedTableName . ' ID";
+			return "No ' . $capTableName . ' ID";
 		}
         $res = $db->delete(\'' . $table . '\', $this->' . $indexFeild . ', \'' . $indexFeild . '\');
          
@@ -451,34 +440,40 @@ EOF
 
 ';
 
-	$outTxtFormatStatics =~ s/,\n$//s;
-	$outTxtFormatStatics .= ');' . "\n\n";
+	$bindValues =~ s/,\n$//s;
+	$bindValues .= ');' . "\n\n";
 
-	$outTxt =
-	    $outTxtClassTop
-	  . $outTxtVars
-	  . $outTxtGetsAndSets
-	  . $outTxtGetAllTxt
-	  . $loadFunc
-	  . $saveToDB
-	  . $insertToDB
-	  . $deleteFromDB . '}'
-	  . $outTxtFormatStatics;
+	my $phpClass =
+	    $classHeader
+	  . $privateVariables
+	  . $getsAndSets
+	  . $getAllFunction
+	  . $loadFunction
+	  . $saveToDBFunction
+	  . $insertToDBFunction
+	  . $deleteFromDBFunction . '}'
+	  . $bindValues;
 
-	$outTxtFull .= $outTxtClassTop . $outTxtVars . $outTxtGetsAndSets . $loadFunc . $saveToDB . $insertToDB . $deleteFromDB . '}';
+	$allPHPClasses .=
+	    $classHeader
+	  . $privateVariables
+	  . $getsAndSets
+	  . $loadFunction
+	  . $saveToDBFunction
+	  . $insertToDBFunction
+	  . $deleteFromDBFunction . '}';
 
 	print "& PHP Class\n";
-	open( FH, ">lib/$capitalisedTableName.php" );
-	print FH '<?php' . $outTxt . "
+	open( FH, ">lib/$capTableName.php" );
+	print FH '<?php' . $phpClass . "
 
 ?>";
 	close(FH);
 
-	$outFormatsTxt .= $outTxtFormatStatics;
+	$outFormatsTxt .= $bindValues;
 }
-
 open( FH, ">lib/Classes.php" );
-print FH '<?php' . $outTxtFull . "
+print FH '<?php' . $allPHPClasses . "
 
 $outFormatsTxt
 
@@ -506,17 +501,69 @@ $sth->finish;
 # Write out the DB Class file
 &makeDBClass();
 
-
 print "Credentials file is stored at $dir/etc/db.conf\n\n";
 print "PHP Classes files are stored at $dir/lib\n\n";
-print "Web pages are stored at $dir/lib\n\n";
-print "The Apache web root is $dir/www\n\n";
-
+print "Web pages are stored at $dir/www\n\n";
 if ( $doApace eq 'y' ) {
-print "Go to http://$domain in a brower\n\n"; 
+	print "The Apache web root is $dir/www\n\n";
+	print "Go to http://$domain in a brower\n\n";
 }
 
 exit;
+
+sub getDBName {
+	print "Enter the name of the database you would like to analyse (phpstartpoint): ";
+	my $ans = <STDIN>;
+	chomp $ans;
+	if ( $ans eq '' ) { $ans = 'phpstartpoint' }
+	return $ans;
+}
+
+sub getDBUser {
+	print "Enter the username to connect to the database (athena): ";
+	my $ans = <STDIN>;
+	chomp $ans;
+	if ( $ans eq '' ) { $ans = 'athena' }
+	return $ans;
+}
+
+sub getDBPwd {
+	print "Enter the password to connect to the database (PHPSPPWD): ";
+	my $ans = <STDIN>;
+	chomp $ans;
+	if ( $ans eq '' ) { $ans = 'PHPSPPWD' }
+	return $ans;
+}
+
+sub getDomain {
+	print "Enter the domain you would like to use for the development site (dev.phpstartpoint.com): ";
+	my $ans = <STDIN>;
+	chomp $ans;
+	if ( $ans eq '' ) { $ans = 'dev.phpstartpoint.com' }
+	return $ans;
+}
+
+sub setupApache {
+	my $apacheInstalled = `dpkg --get-selections | grep apache`;
+	if ( $apacheInstalled =~ /install/s ) {
+
+		print "Would you like to setup the Apache web server on this computer\nfor the development domain http://$domain? \ny/N: ";
+		$doApace = <STDIN>;
+		chomp $doApace;
+
+		if ( $doApace eq 'y' ) {
+			my $user = $>;
+			if ($user) {
+				print "\nGotta be root!\n\nTry sudo ./phpStartPoint.pl\n\n";
+				exit;
+			}
+
+			# Write out the Apache2 Conf file
+			&makeApacheConf();
+
+		}
+	}
+}
 
 sub getType() {
 	my $table = shift;
@@ -726,7 +773,7 @@ if (! class_exists('DB')) {
 				dbuser=adbusername
 				host=localhost
              */
-            $config = parse_ini_file('../../etc/db.conf');
+            $config = parse_ini_file('THISDIR/etc/db.conf');
             $this->user = $config['dbuser'];
             $this->password = $config['dbpw'];
             $this->database = $config['db'];
@@ -932,6 +979,9 @@ if (! class_exists('DB')) {
 }
 ?>
 ^;
+
+$dbclassFile =~ s/THISDIR/$dir/s;
+
 	open( FH, ">lib/DB.php" );
 	print FH $dbclassFile;
 	close(FH);
