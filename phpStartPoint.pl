@@ -58,7 +58,6 @@ if ( $ans eq 'y' ) {
 	$dbpw   = 'PHPSPPWD';
 	$dbuser = 'athena';
 	$host   = 'localhost';
-	$domain = 'dev.phpstartpoint.com';
 
 	# Get MySQL Root password
 	print "Type in the MySQL Root Password\n:";
@@ -536,10 +535,10 @@ print FH '</body></html>';
 close(FH);
 
 	$htmlIndex .= <<EOF;
-phpStartPoint gives developers a way to create a coding <br>
+<div style="margin:60px;">phpStartPoint gives developers a way to create a coding <br>
 environment quickly to allow rapid development of solutions<br> 
 blah blah blah ... <br><br><br>
-tl:dr use it if helps :) <br>
+tl:dr use it if helps :) </div>
 EOF
 
 

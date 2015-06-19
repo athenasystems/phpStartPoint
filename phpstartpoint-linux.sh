@@ -39,6 +39,7 @@ fi
 
 
 spacer="---------------------------------------------------------------"
+installPromt="Would you like me to install it now? Y/n:"
 echo $spacer
 echo "Setting up phpStartPoint to create PHP classes and web interfaces ... "
 echo $spacer
@@ -51,7 +52,8 @@ if [[ $platform == 'debian' ]]; then
 		echo "PHP is installed"
 	else
 		echo $spacer
-		echo "PHP does not appear to be installed. Would you like to install it now? Y/n:"	
+		echo "PHP does not appear to be installed"	
+		echo "Would you like to install it now? Y/n:"	
 		read -s -n 1 ans
 		if [ "$ans" = "" ]; then 
 			ans=y
@@ -73,7 +75,8 @@ if [[ $platform == 'debian' ]]; then
 		echo "MySQL server is installed"
 	else
 		echo $spacer
-		echo "MySQL server does not appear to be installed. Would you like to install it now? Y/n:"	
+		echo "MySQL server does not appear to be installed"
+		echo $installPromt
 		read -s -n 1 ans
 		if [ "$ans" = "" ]; then 
 			ans=y
@@ -97,7 +100,8 @@ if [[ $platform == 'debian' ]]; then
 	then echo "Apache2 is installed"
 	else
 		echo $spacer
-		echo "Apache2 does not appear to be installed. Would you like to install it now? Y/n:"	
+		echo "Apache2 does not appear to be installed"
+		echo $installPromt
 		read -s -n 1 ans
 		if [ "$ans" = "" ]; then 
 			ans=y
