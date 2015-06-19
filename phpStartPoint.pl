@@ -139,6 +139,7 @@ while ( my @row_array = $sth->fetchrow_array ) {
 	my $bindValues       = "\n\ \$" . $table . "Formats= array(\n";
 	my $capTableName     = ucfirst($table);
 
+
 	my $classHeader = "
 	
 class $capTableName
