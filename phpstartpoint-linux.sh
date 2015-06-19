@@ -38,7 +38,7 @@ if [[ $platform == 'freebsd' ]]; then
 fi
 
 
-spacer="---------------------------------------------------------------\n"
+spacer="---------------------------------------------------------------"
 echo $spacer
 echo "Setting up phpStartPoint to create PHP classes and web interfaces ... "
 echo $spacer
@@ -51,7 +51,7 @@ if [[ $platform == 'debian' ]]; then
 		echo "PHP is installed"
 	else
 		echo $spacer
-		echo "PHP does not appear to be installed. Would you like to install it now? y/n:"	
+		echo "PHP does not appear to be installed. Would you like to install it now? Y/n:"	
 		read -s -n 1 ans
 		if [ "$ans" = "" ]; then 
 			ans=y

@@ -10,7 +10,7 @@ my $host   = 'localhost';
 ###########################################################
 use DBI;
 use Term::ReadKey;
-my $dir = $ENV{"HOME"} . '/phpstartpoint';
+my $dir = $ENV{"HOME"};
 my $user = (defined($ENV{"SUDO_USER"})) ? $ENV{"SUDO_USER"} : $ENV{"USER"}  ;
 
 system("clear");
@@ -19,21 +19,25 @@ print "$spacer\n\nRunning ... php Start Point\n\n$spacer\n\n";
 my $ans = '';
 
 # Get folder
-print "Where shall I save the php files?\n($dir): ";
+print "Where shall I put the phpStartPoint directory for the php files?\n($dir): ";
 ReadMode 1;
 $dir = <STDIN>;
 chomp $dir;
 
 if ((!defined($dir) )||( $dir eq '' )) {
 	$dir = $ENV{"HOME"} . '/phpstartpoint';
+}else{
+	$dir .= '/phpstartpoint';
 }
 
 if ( -e $dir ) {
-	print "Warning: Everything in the folder will be deleted OK?\n(Y/n): ";
+	print "Warning: Everything in the folder $dir will be deleted OK?\n(Y/n): ";
 	ReadMode 4;
 	my $confirm = '';
 	while ( not defined( $confirm = ReadKey(-1) ) ) { }
 	chomp $confirm;
+	ReadMode 1;
+	print "\n";
 	if ( $confirm eq '' ) { $confirm = 'y' }
 	if ( $confirm eq 'n' ) {
 		print "OK quitting ...\n";
@@ -125,6 +129,7 @@ my $allPHPClasses = '';
 my $phpOutTxtFull = '';
 my $htmlIndex     = '';
 my $outFormatsTxt = '';
+my $navHTML = '';
 
 print "\n$spacer\nRunning phpStartPoint on the $db database...\n$spacer\n";
 
@@ -139,7 +144,9 @@ while ( my @row_array = $sth->fetchrow_array ) {
 	my $table            = $row_array[0];
 	my $bindValues       = "\n\ \$" . $table . "Formats= array(\n";
 	my $capTableName     = ucfirst($table);
-
+$navHTML .=<<EOF;
+<a href="/$table">$capTableName</a> | 
+EOF
 
 	my $classHeader = "
 	
@@ -516,11 +523,17 @@ $outFormatsTxt
 ?>";
 close(FH);
 
+$navHTML=~s/ \| $//s;
+
+$navHTML =<<EOF;
+<div>$navHTML</div>
+EOF
+
 print "$spacer\nCreating headers and footers for the web pages $dir/inc\n";
 open( FH, ">$dir/inc/header.php" );
 print FH '<!DOCTYPE html><html><head><meta charset="UTF-8">
 <title></title>
-</head><body>';
+</head><body>' . $navHTML;
 close(FH);
 
 open( FH, ">$dir/inc/footer.php" );
