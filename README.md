@@ -34,7 +34,7 @@ The script creates a series of php pages intended to be the basis for a web site
 	4. A page to delete a row
 
 # Redundent Classes and Pages
-It is unlikely all the php code that is produced will be needed, but the idea is that it gives a developer a good starting place to start developing further.
+It is unlikely all the php code that is produced will be needed, but the idea is that it gives a developer a good starting point to start developing further.
 
 # The DB.php Class
 I totally stole this from John Morris at http://www.johnmorrisonline.com/simple-php-class-prepared-statements-mysqli. All credit to John for this. I have made a few alterations. Check out John's great tutorials for further details.
