@@ -398,11 +398,6 @@ if (! empty($res)) {
 	print FH $htmlDeleteHead . $htmlViewBody . $formEditTagStart . $phpDeleteOutTxt . $formTagEnd . $htmlFoot;
 	close(FH);
 
-	$htmlIndex .= <<EOF;
-<a href="$table/index.php">$table</a><br>
-
-EOF
-
 	my $colList = join( ',', @cols );
 
 	my $loadFunction = '
@@ -539,6 +534,14 @@ close(FH);
 open( FH, ">$dir/inc/footer.php" );
 print FH '</body></html>';
 close(FH);
+
+	$htmlIndex .= <<EOF;
+phpStartPoint gives developers a way to create a coding <br>
+environment quickly to allow rapid development of solutions<br> 
+blah blah blah ... <br><br><br>
+tl:dr use it if helps :) <br>
+EOF
+
 
 print "$spacer\nCreating the Index web page in $dir/www/index.php\n";
 open( FH, ">$dir/www/index.php" );
