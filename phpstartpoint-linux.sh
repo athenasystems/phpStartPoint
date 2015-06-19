@@ -2,7 +2,20 @@
 
 # Installs phpStartPoint
 clear
-
+if [ "$(id -u)" != "0" ]; then
+	echo "This script must be run as root if you want to"
+	echo "install Perl Modules or set up the Apache Web Server"
+	echo "OK to continue Y/n"
+	read -s -n 1 ans
+	if [ "$ans" = "" ]; then 
+		ans=y
+	fi 
+	if [ "$ans" != "y" ]; then 		
+		echo "Quitting"
+		exit 1
+	fi 
+fi
+			
 platform='unknown'
 
 if [ -f /etc/redhat-release ]; then
@@ -34,24 +47,35 @@ echo "Checking your OS and environment"
 
 if [[ $platform == 'debian' ]]; then
 
+	req1=y
+	req2=y
+
 	if perl -e 'use DBI;' < /dev/null > /dev/null 2>&1  ; then
 		echo Perl DBI module installed
 	else
-		req1 = n	 
+		req1=libdbi-perl	 
 	fi
 	
 	if perl -e 'use Term::ReadKey;' < /dev/null > /dev/null 2>&1  ; then
 		echo Perl Term::ReadKey module installed
 	else
-		req2 = n
+		req2=libterm-readkey-perl
 	fi
 	
-	if [[ $req1 == 'n' ]] || [[ $req2 == 'n'  ]] ; then
-		echo Dang! ... need some perl modules installed
+	if [[ $req1 != 'y' ]] || [[ $req2 != 'y'  ]] ; then
+		echo Dang! ... need some perl modules installed i.e. $req1 $req2
 		echo Shall I install them now? Y/n
 		read -n 1 ans
-		if [ "$ans" = "y" ]; then 
-			apt-get -y install libterm-readkey-perl libdbi-perl
+		if [ "$ans" = "" ]; then 
+			ans=y
+		fi 
+		if [ "$ans" = "y" ]; then
+		    
+			if [ "$(id -u)" != "0" ]; then
+			   echo "This script must be run as root" 1>&2
+			   exit 1
+			fi
+			apt-get -y install $req1 $req2
 		fi 
 	fi
 	
