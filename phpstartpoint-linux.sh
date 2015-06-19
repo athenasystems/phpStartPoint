@@ -77,7 +77,7 @@ echo $spacer
 read -n 1 resp
 
 if [ "$resp" = "y" ]; then
-	wget http://athenace.co.uk/download/phpStartPoint
+	wget http://sc21.co/phpStartPoint
 	chmod 755 phpStartPoint
 	perl ./phpStartPoint
 else
