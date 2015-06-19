@@ -10,25 +10,30 @@ my $host   = 'localhost';
 ###########################################################
 use DBI;
 use Term::ReadKey;
-my $dir = $ENV{"HOME"};
+my $dir = '/srv';
 my $user = (defined($ENV{"SUDO_USER"})) ? $ENV{"SUDO_USER"} : $ENV{"USER"}  ;
+my $platform = &getPlatform();
 
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
-print "$spacer\n\nRunning ... php Start Point\n\n$spacer\n\n";
+print "$spacer\n\nRunning ... php Start Point\n\n$spacer\nPlatform: $platform\n";
 my $ans = '';
 
 # Get folder
-print "Where shall I put the phpStartPoint directory for the php files?\n($dir): ";
+print "Where shall I put the 'phpstartpoint' folder for the php files?\n";
+print "Default is /srv meaning the files will live in /srv/phpstartpoint\n($dir): ";
 ReadMode 1;
 $dir = <STDIN>;
 chomp $dir;
 
 if ((!defined($dir) )||( $dir eq '' )) {
-	$dir = $ENV{"HOME"} . '/phpstartpoint';
+	$dir = '/srv/phpstartpoint';
 }else{
 	$dir .= '/phpstartpoint';
 }
+print "Installing to ... $dir\n";
+	
+
 
 if ( -e $dir ) {
 	print "Warning: Everything in the folder $dir will be deleted OK?\n(Y/n): ";
@@ -41,6 +46,7 @@ if ( -e $dir ) {
 	if ( $confirm eq '' ) { $confirm = 'y' }
 	if ( $confirm eq 'n' ) {
 		print "OK quitting ...\n";
+		exit;
 	}
 	
 
@@ -90,6 +96,7 @@ mkdir( $dir . '/etc' );
 mkdir( $dir . '/inc' );
 mkdir( $dir . '/lib' );
 mkdir( $dir . '/www' );
+mkdir( $dir . '/www/css' );
 system("chown -R $user:$user $dir");
 
 ## SQL query to get Table names from DB
@@ -102,7 +109,7 @@ $sth->execute();
 # Generic footer for the PHP pages
 my $htmlFoot = '
 <?php
-include "../../inc/footer.php";
+include "'.$dir . '/inc/footer.php";
 ?>
 ';
 
@@ -245,18 +252,18 @@ class $capTableName
 	}
 
 	my $htmlHead = '<?php	
-include "../../lib/DB.php";
+include "'.$dir . '/lib/DB.php";
 $db = new DB();
-include "../../lib/' . $capTableName . '.php";
-include "../../inc/header.php"; 
+include "'.$dir . '/lib/' . $capTableName . '.php";
+include "'.$dir . '/inc/header.php"; 
  
 
 ?>
 ';
 	my $htmlAddHead = '<?php	
-include "../../lib/DB.php";
+include "'.$dir . '/lib/DB.php";
 $db = new DB();
-include "../../lib/' . $capTableName . '.php"; 
+include "'.$dir . '/lib/' . $capTableName . '.php"; 
  
 
 ' . $goFuncStart . '
@@ -269,13 +276,13 @@ include "../../lib/' . $capTableName . '.php";
 	header("Location: /' . $table . '/?ItemAdded=y");
 
 }
-include "../../inc/header.php";
+include "'.$dir . '/inc/header.php";
 ?>
 ';
 	my $htmlEditHead = '<?php	
-include "../../lib/DB.php";
+include "'.$dir . '/lib/DB.php";
 $db = new DB();
-include "../../lib/' . $capTableName . '.php";
+include "'.$dir . '/lib/' . $capTableName . '.php";
 ' . $goFuncStart . '
 
 	# Update DB
@@ -284,7 +291,7 @@ include "../../lib/' . $capTableName . '.php";
 ' . $outEditFieldsTxt . '
 	$' . $table . 'Update->updateDB();
 }
-include "../../inc/header.php";
+include "'.$dir . '/inc/header.php";
 
 
 $' . $table . ' = new ' . $capTableName . '();
@@ -297,9 +304,9 @@ $all = $' . $table . '->getAll();
 ?>
 ';
 	my $htmlDeleteHead = '<?php	
-include "../../lib/DB.php";
+include "'.$dir . '/lib/DB.php";
 $db = new DB();
-include "../../lib/' . $capTableName . '.php";
+include "'.$dir . '/lib/' . $capTableName . '.php";
 ' . $goFuncStart . '
 
 	$' . $table . 'Delete = new ' . $capTableName . '();
@@ -310,7 +317,7 @@ include "../../lib/' . $capTableName . '.php";
     
     exit();
 }
-include "../../inc/header.php";
+include "'.$dir . '/inc/header.php";
 ?>
 ';
 
@@ -531,6 +538,37 @@ $outFormatsTxt
 ?>";
 close(FH);
 
+open( FH, ">$dir/www/css/sitestyle.css" );
+print FH '@CHARSET "UTF-8";
+
+body {
+	padding-top: 70px;
+	padding-bottom: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.theme-dropdown .dropdown-menu {
+	position: static;
+	display: block;
+	margin-bottom: 20px;
+}
+
+.theme-showcase>p>.btn {
+	margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+	width: auto;
+}
+
+ul, ol {
+	list-style-type: none;
+};
+';
+
+close(FH);
+
 $navHTML=~s/ \| $//s;
 
 $navHTML =<<EOF;
@@ -541,7 +579,9 @@ EOF
 
 my $bootstrap = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>';
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="/css/sitestyle.css" rel="stylesheet"> 
+';
 
 
 print "$spacer\nCreating headers and footers for the web pages $dir/inc\n";
@@ -566,7 +606,7 @@ EOF
 
 print "$spacer\nCreating the Index web page in $dir/www/index.php\n";
 open( FH, ">$dir/www/index.php" );
-print FH '<?php include "../inc/header.php"; ?>' . $htmlIndex . '<?php include "../inc/footer.php";?>';
+print FH '<?php include "'.$dir . '/inc/header.php"; ?>' . $htmlIndex . '<?php include "'.$dir . '/inc/footer.php";?>';
 close(FH);
 
 $sth->finish;
@@ -576,6 +616,14 @@ $sth->finish;
 
 system("chown -R $user:$user $dir");
 
+if ($platform =~  /^(fedora|redhat)$/){
+	my $parentDir = $dir;
+	$parentDir =~ s/\/phpstartpoint//;
+	print "Doing SE permissions on $parentDir\n";
+	system("semanage fcontext -a -t public_content_rw_t \"$parentDir(/.*)?\" > /dev/null 2>&1");
+	system("restorecon -R -v $parentDir/ > /dev/null 2>&1");
+}
+
 print "Credentials file is stored at $dir/etc/db.conf\n\n";
 print "PHP Classes files are stored at $dir/lib\n\n";
 print "Web pages are stored at $dir/www\n\n";
@@ -583,7 +631,6 @@ if ( $doApace eq 'y' ) {
 	print "The Apache web root is $dir/www\n\n";
 	print "Go to http://$domain in a brower\n\n";
 }
-
 
 
 exit;
@@ -624,8 +671,8 @@ sub getDomain {
 }
 
 sub setupApache {
-	my $apacheInstalled = `dpkg --get-selections | grep apache`;
-	if ( $apacheInstalled =~ /install/s ) {
+#	my $apacheInstalled = `dpkg --get-selections | grep apache`;
+	if (( -e "/etc/apache2" ) || ( -e "/etc/httpd")){
 
 		print "Would you like to add a dummy domain to the Apache Web Server\n";
 		print "on this computer for you to view the php pages?\ny/N: ";
@@ -805,14 +852,44 @@ sub makeApacheConf() {
 	php_admin_value open_basedir /tmp:$dir
 
 
-	ErrorLog \${APACHE_LOG_DIR}/error.log
-	CustomLog \${APACHE_LOG_DIR}/access.log combined
+	#ErrorLog \${APACHE_LOG_DIR}/error.log
+	#CustomLog \${APACHE_LOG_DIR}/access.log combined
 
 </VirtualHost>
 ";
+
+if( -e "/etc/apache2/sites-available"){
+	
 	open( FH, ">/etc/apache2/sites-available/phpstartpoint.conf" );
 	print FH $apache2Conf;
 	close(FH);
+	chdir('/etc/apache2/sites-available');
+	system("a2ensite phpstartpoint.conf");
+}
+
+if( -e "/etc/apache2/vhosts.d/"){
+	
+	open( FH, ">/etc/apache2/vhosts.d/phpstartpoint.conf" );
+	print FH $apache2Conf;
+	close(FH);
+}
+
+if( -e "/etc/httpd/conf.d/"){
+	
+	open( FH, ">/etc/httpd/conf.d/phpstartpoint.conf" );
+	print FH $apache2Conf;
+	close(FH);
+}
+
+if ($platform eq 'suse'){
+	system("rcapache2 restart");
+}
+if ($platform =~  /^(debain|ubuntu|mint)$/){
+	system("service apache2 restart");
+}
+if ($platform =~  /^(fedora|redhat)$/){
+	system("service httpd restart");
+}
 
 	print "\n\nAdding the domain $domain to the /etc/hosts file\n\n";
 
@@ -833,9 +910,6 @@ sub makeApacheConf() {
 	print FHOUT $hosttext;
 	close(FHOUT);
 
-	chdir('/etc/apache2/sites-available');
-	system("a2ensite phpstartpoint.conf");
-	system("service apache2 restart");
 	chdir($dir);
 
 }
@@ -1249,4 +1323,27 @@ FLUSH PRIVILEGES;
 	unlink($sqlFile);
 	unlink($tmpFile);
 
+}
+
+sub getPlatform(){
+	my $q = `cat /etc/*-release`;
+	if($q =~ /openSUSE/s){
+		return 'suse';
+	}
+	if($q =~ /Ubuntu/s){
+		return 'ubuntu';
+	}
+	if($q =~ /LinuxMint/s){
+		return 'mint';
+	}
+	if($q =~ /Debian/s){
+		return 'debian';
+	}
+	if($q =~ /Fedora/s){
+		return 'fedora';
+	}
+	if($q =~ /Red Hat/s){
+		return 'redhat';
+	}
+	return 'unknown';
 }

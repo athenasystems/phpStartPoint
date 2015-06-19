@@ -31,6 +31,7 @@ platform='suse'
 fi
 
 
+
 unamestr=`uname`
 regex='BSD'
 if [[ "$unamestr" =~ 'FreeBSD' ]]; then
@@ -59,9 +60,16 @@ if [[ $platform == 'suse' ]]; then
 		ans=y
 	fi 	
 	if [ "$ans" = "y" ]; then 
-		aptitude -y install mysql-community-server php5 php5-mysql apache2 apache2-mod_php5 perl-DBI perl-Term-ReadKey
+				
+		zypper install mariadb
+		systemctl start mariadb
+		systemctl enable mariadb
+		aptitude -y install php5 php5-mysql apache2 apache2-mod_php5 perl-DBI perl-Term-ReadKey perl-DBD-mysql
+		rcmysql start
+		rcapache2 start
 	fi				    
 fi
+
 
 if [[ $platform == 'debian' ]]; then
 
@@ -172,19 +180,28 @@ fi
 
 if [[ $platform == 'redhat' ]]; then
 
-	if [ "$(id -u)" != "0" ]; then
-	   echo "This script must be run as root" 1>&2
-	   exit 1
+
+	echo $spacer
+	echo "Install any missing stuff? Y/n:"	
+	read -s -n 1 ans
+	if [ "$ans" = "" ]; then 
+		ans=y
+	fi 	
+	if [ "$ans" = "y" ]; then 	
+		if [ "$(id -u)" != "0" ]; then
+		   echo "This script must be run as root" 1>&2
+		   exit 1
+		fi
+		
+		yum install httpd perl-DBI perl-TermReadKey perl-DBD-mysql mariadb-server php php-mysql
+		service httpd start
+		systemctl start mariadb
+		systemctl enable mariadb
+		
+		chkconfig httpd on
+		chkconfig mysqld on
+		service httpd restart
 	fi
-	
-	yum install httpd
-	service httpd start
-	yum install mysql mysql-server
-	service mysqld start
-	yum install php php-mysql
-	chkconfig httpd on
-	chkconfig mysqld on
-	service httpd restart
 fi
 
 
