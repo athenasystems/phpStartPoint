@@ -31,6 +31,31 @@ echo "Setting up phpStartPoint to create PHP classes and web interfaces ... "
 echo $spacer
 
 if [[ $platform == 'debian' ]]; then
+
+	if perl -e 'use DBI;' < /dev/null > /dev/null 2>&1  ; then
+		echo Yes we have perl DBI module
+	else
+		req1 = n	 
+	fi
+	
+	if perl -e 'use Term::ReadKey;' < /dev/null > /dev/null 2>&1  ; then
+		echo Yes we have perl Term::ReadKey module
+	else
+		req2 = n
+	fi
+	
+	if [[ $req1 == 'n' ]] || [[ $req2 == 'n'  ]]
+		echo Dang! ... need some perl modules installed
+		echo Shall I install them now? Y/n
+		read -n 1 ans
+		if [ "$ans" = "y" ]; then 
+			apt-get -y install libterm-readkey-perl libdbi-perl
+		fi 
+	fi
+	
+	
+	
+
 	if [ -f /usr/sbin/apache2 ]
 	then echo "Apache2 is installed"
 	else
