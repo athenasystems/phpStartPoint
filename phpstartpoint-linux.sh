@@ -30,21 +30,23 @@ echo $spacer
 echo "Setting up phpStartPoint to create PHP classes and web interfaces ... "
 echo $spacer
 
+echo "Checking your OS and environment"
+
 if [[ $platform == 'debian' ]]; then
 
 	if perl -e 'use DBI;' < /dev/null > /dev/null 2>&1  ; then
-		echo Yes we have perl DBI module
+		echo Perl DBI module installed
 	else
 		req1 = n	 
 	fi
 	
 	if perl -e 'use Term::ReadKey;' < /dev/null > /dev/null 2>&1  ; then
-		echo Yes we have perl Term::ReadKey module
+		echo Perl Term::ReadKey module installed
 	else
 		req2 = n
 	fi
 	
-	if [[ $req1 == 'n' ]] || [[ $req2 == 'n'  ]]
+	if [[ $req1 == 'n' ]] || [[ $req2 == 'n'  ]] ; then
 		echo Dang! ... need some perl modules installed
 		echo Shall I install them now? Y/n
 		read -n 1 ans
