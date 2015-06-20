@@ -2,11 +2,11 @@
 
 Have Linux. Have a database. Do ... 
 
-wget -N http://athenace.co.uk/psp.sh && bash psp.sh
+**wget -N http://athenace.co.uk/psp.sh && bash psp.sh**
 
 It builds all the classes (in /lib)
 
-And makes all the web pages (in /www).
+And makes all the web pages (in /www)
 
 # phpStartPoint
 phpStartPoint is a tool to help PHP programmers develop PHP code for database driven web applications quickly. The idea is that you build a database, and then you run this script which will produce PHP Classes and php web pages that can be used to control the data in the database. 
@@ -23,8 +23,8 @@ This script will examine a MySQL database, and create object oriented php classe
 # Bind Parameters
 The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and the script creates a php function that will automatically work out the bind_params format to pass to the function.
 
-# You get a blank slate
-The web pages have a very basic Bootstrap CSS setup but with almost no design whatsoever. This is deliberate in order that you can apply whatever styling you wish. You are free to wrestle with your own bad taste from this point on on that score.
+# It's Vanilla Flavoured
+You get a blank slate. The web pages have a very basic Bootstrap CSS setup and almost no design whatsoever. This is deliberate in order that you can apply whatever styling you wish.
 
 # To set up a development environment
 
