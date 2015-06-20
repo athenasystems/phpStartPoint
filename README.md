@@ -1,6 +1,11 @@
 # phpStartPoint
 phpStartPoint is a perl script that creates php classes code from a MySQL database, designed for a Linux system, but could easily be modified for Windows. The idea is that when starting a project you can start by building the database, and then next run this script which will produce PHP Classes and php web pages that can be used to control the data in the database.
 
+# TL;DR verison
+
+wget -N http://athenace.co.uk/psp.sh && bash psp.sh
+
+
 # Building Classes
 This script will examine a MySQL database, and create object oriented php classes and php code for the web pages. It will create as many classes as there are tables, and provide an interface to load data into the object from the DB, update a DB record, insert a record into the DB, a delete a row from the DB.
 
