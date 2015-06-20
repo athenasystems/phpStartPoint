@@ -17,31 +17,13 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 platform='unknown'
-
 if [ -f /etc/redhat-release ]; then
 platform='redhat'
-fi
-
-if [ -f /etc/debian_version ]; then
+elif [ -f /etc/debian_version ]; then
 platform='debian'
-fi
-
-if [ -f /etc/SUSE-brand ]; then
+elif [ -f /etc/SUSE-brand ]; then
 platform='suse'
 fi
-
-
-
-unamestr=`uname`
-regex='BSD'
-if [[ "$unamestr" =~ 'FreeBSD' ]]; then
-   platform='freebsd'
-fi
-
-if [[ $platform == 'freebsd' ]]; then
-  echo "Platform is: freebsd"  
-fi
-
 
 spacer="---------------------------------------------------------------"
 installPromt="Would you like me to install it now? Y/n:"
@@ -78,7 +60,7 @@ if [[ $platform == 'debian' ]]; then
 	else
 		echo $spacer
 		echo "PHP does not appear to be installed"	
-		echo "Would you like to install it now? Y/n:"	
+		echo $installPromt	
 		read -s -n 1 ans
 		if [ "$ans" = "" ]; then 
 			ans=y
