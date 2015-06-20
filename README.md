@@ -9,7 +9,11 @@ It builds all the classes (in /lib)
 And makes all the web pages (in /www).
 
 # phpStartPoint
-phpStartPoint is a tool to help PHP programmers develop PHP code for database driven web applications quickly. The idea is that you build a database, and then you run this script which will produce PHP Classes and php web pages that can be used to control the data in the database. It builds PHP Class code, and web pages to list, add, edit and delete items from the database. What gets output is a starting point, and not all of the code will be useful or probably needed. It aims to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. 
+phpStartPoint is a tool to help PHP programmers develop PHP code for database driven web applications quickly. The idea is that you build a database, and then you run this script which will produce PHP Classes and php web pages that can be used to control the data in the database. 
+
+It builds PHP Class code, and web pages to list, add, edit and delete items from the database. What gets output is a starting point, and not all of the code will be useful or probably needed. 
+
+It aims to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. 
 
 It also sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine, or a server.
 
@@ -18,6 +22,9 @@ This script will examine a MySQL database, and create object oriented php classe
 
 # Bind Parameters
 The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and the script creates a php function that will automatically work out the bind_params format to pass to the function.
+
+# You get a blank slate
+The web pages have a very basic Bootstrap CSS setup but with almost no design whatsoever. This is deliberate in order that you can apply whatever styling you wish. You are free to wrestle with your own bad taste from this point on on that score.
 
 # To set up a development environment
 
