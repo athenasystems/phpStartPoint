@@ -38,9 +38,9 @@ It is unlikely all the php code that is produced will be needed, but the idea is
 # The DB.php Class
 I totally stole this from John Morris at http://www.johnmorrisonline.com/simple-php-class-prepared-statements-mysqli. All credit to John for this. I have made a few alterations. Check out John's great tutorials for further details.
 
-	1. The format variable has been converted into a string rather than an array.
-	2. The delete function is now passed 3 parameters to allow for index columns not named 'ID'.
-	3. The '%' was taken off the format strings
-	4. The connection to the DB is now done in the __construct, as suggested by John, and it uses an external file to read in credentials
+The format variable has been converted into a string rather than an array  
+The delete function is now passed 3 parameters to allow for index columns not named 'ID'  
+The '%' was taken off the format strings  
+The connection to the DB is now done in the __construct, as suggested by John, and it uses an external file to read in credentials  
 
 
