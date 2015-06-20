@@ -1,4 +1,4 @@
-# TL;DR verison
+# tl;dr verison
 
 Have Linux. Have a database. Do ... 
 
