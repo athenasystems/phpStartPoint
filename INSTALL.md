@@ -8,7 +8,7 @@ The Bash script will check your OS and environment for required software. If you
 
 The script will make attempts to install and setup a development enviroment for you.
 
-The psp.sh script then tries to download the phpStartPoint script (from http://athenace.co.uk/phpStartPoint). It then sets permissions (chmod 755), and runs it (perl ./phpStartPoint).
+The psp.sh script will then download the phpStartPoint perl script (from http://athenace.co.uk/phpStartPoint). It sets permissions (chmod 755), and runs it (perl ./phpStartPoint).
 
 # Example Database
 I have included a very simple example database if you want to see the script before you try it on your own Database. When the script runs it will ask you if you want to try it.
