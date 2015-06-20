@@ -1,4 +1,4 @@
-# tl;dr verison
+# tl;dr version
 
 Have Linux. Have a database. Do ... 
 
