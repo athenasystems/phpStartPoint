@@ -52,6 +52,21 @@ if ( -e $dir ) {
 
 }
 
+if ( -e "$dir" ) {
+
+	# Clearing any previously made scripts
+	system("rm -rf $dir");
+}
+
+mkdir( $dir );
+mkdir( $dir . '/etc' );
+mkdir( $dir . '/inc' );
+mkdir( $dir . '/lib' );
+mkdir( $dir . '/www' );
+mkdir( $dir . '/www/css' );
+system("chown -R $user:$user $dir");
+
+
 # Import Example DB
 print "Would you like to install an example database to create PHP files from?\ny/N: ";
 ReadMode 4;
@@ -85,19 +100,6 @@ print "$spacer\n\n";
 my $doApace = '';
 &setupApache;
 
-if ( -e "$dir/etc" ) {
-
-	# Clearing any previously made scripts
-	system("rm -rf $dir");
-}
-
-mkdir( $dir );
-mkdir( $dir . '/etc' );
-mkdir( $dir . '/inc' );
-mkdir( $dir . '/lib' );
-mkdir( $dir . '/www' );
-mkdir( $dir . '/www/css' );
-system("chown -R $user:$user $dir");
 
 ## SQL query to get Table names from DB
 my $query   = "show tables";

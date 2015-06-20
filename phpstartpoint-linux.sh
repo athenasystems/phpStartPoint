@@ -1,21 +1,21 @@
 #!/bin/bash
 
-# Installs phpStartPoint
+# Prepares your system to run phpStartPoint
 clear
 if [ "$(id -u)" != "0" ]; then
 	echo "This script must be run as root if you want to"
 	echo "install Perl Modules or set up the Apache Web Server"
 	echo "OK to continue Y/n"
 	read -s -n 1 ans
-	if [ "$ans" = "" ]; then 
+	if [ "$ans" = "" ]; then
 		ans=y
-	fi 
-	if [ "$ans" != "y" ]; then 		
+	fi
+	if [ "$ans" != "y" ]; then
 		echo "Quitting"
 		exit 1
 	fi 
 fi
-			
+
 platform='unknown'
 
 if [ -f /etc/redhat-release ]; then
@@ -49,7 +49,7 @@ echo $spacer
 echo "Setting up phpStartPoint to create PHP classes and web interfaces ... "
 echo $spacer
 echo "Checking your OS and environment"
-echo OS is $platform
+echo OS is $platform based
 
 if [[ $platform == 'suse' ]]; then
 
