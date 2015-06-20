@@ -8,7 +8,7 @@ This script will examine a MySQL database, and create object oriented php code. 
 
 Run this command in a terminal :-
 
-# wget -N http://athenace.co.uk/psp.sh && bash psp.sh
+**wget -N http://athenace.co.uk/psp.sh && bash psp.sh**
 
 The script will check your OS and environment for required software. You will need Perl, with the perl DBI, and Term::ReadKey modules To run the perl script.
 
