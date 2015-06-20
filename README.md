@@ -4,10 +4,6 @@ phpStartPoint is a perl script that creates php classes code from a MySQL databa
 # Building Classes
 This script will examine a MySQL database, and create object oriented php classes and php code for the web pages. It will create as many classes as there are tables, and provide an interface to load data into the object from the DB, update a DB record, insert a record into the DB, a delete a row from the DB.
 
-# Running the phpStartPoint script
-
-You can just run the **phpStartPoint.pl** script in this package. You will need Perl, with the perl DBI, and Term::ReadKey modules i.e. perl-DBI perl-Term-ReadKey on debian based OS, or perl-DBI perl-TermReadKey on a RedHat based distro.
-
 # To set up a development environment
 
 Run this command in a terminal :-
@@ -23,6 +19,10 @@ In 'www' it will write the php pages intended as a starting point for your devel
 In 'etc' it will create a config file with your databases name, user and pass for the DB Class to use. This way it keeps it out of your code. If you chown yourusername:www-data and chmod 660, it will protect it from being read by normal users, but still be accesible by you and the Apache2 user.  
 In 'inc' it will write the header and footer for the php pages.  
 
+
+# Just running the phpStartPoint script
+
+You can just run the **phpStartPoint.pl** script in this package. You will need Perl, with the perl DBI, and Term::ReadKey modules i.e. perl-DBI perl-Term-ReadKey on debian based OS, or perl-DBI perl-TermReadKey on a RedHat based distro.
 
 
 # Bind parameters
