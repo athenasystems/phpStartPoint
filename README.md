@@ -1,6 +1,6 @@
 # TL;DR verison
 
-Have Linux. Do ... 
+Have Linux. Have a database. Do ... 
 
 wget -N http://athenace.co.uk/psp.sh && bash psp.sh
 
@@ -11,12 +11,13 @@ And makes all the web pages (in /www).
 # phpStartPoint
 phpStartPoint is a tool to help PHP programmers develop code for database driven web applications quickly. The idea is that you build a database, and then you run this script which will produce PHP Classes and php web pages that can be used to control the data in the database. 
 
-It also sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine.
-
-phpStartPoint is a perl script that creates php classes code from a MySQL database, designed for a Linux system, but could easily be modified for Windows.
+It also sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine, or a server.
 
 # Building Classes
 This script will examine a MySQL database, and create object oriented php classes and php code for the web pages. It will create as many classes as there are tables, and provide an interface to load data into the object from the DB, update a DB record, insert a record into the DB, a delete a row from the DB.
+
+# Bind parameters
+The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and the script creates a php function that will automatically work out the bind_params format to pass to the function.
 
 # To set up a development environment
 
@@ -50,9 +51,6 @@ In 'inc' it will write the header and footer for the php pages.
 # Just running the phpStartPoint script
 You can just run the **phpStartPoint.pl** script in this package. You will need Perl, with the perl DBI, and Term::ReadKey modules i.e. perl-DBI perl-Term-ReadKey on debian based OS, or perl-DBI perl-TermReadKey on a RedHat based distro.
 
-
-# Bind parameters
-The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and the script creates a php function that will automatically work out the bind_params format to pass to the function.
 
 # PHP pages
 The script creates a series of php pages intended to be the basis for a web site that controls the data in the MySQL database. For each table four pages are created:
