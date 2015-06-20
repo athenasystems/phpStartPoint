@@ -1,6 +1,6 @@
 # tl;dr version
 
-Have Linux. Have a database. Do ... 
+Have Linux. Have a database. In a terminal do ... 
 
 **wget -N http://athenace.co.uk/psp.sh && sudo bash psp.sh**
 
@@ -9,7 +9,7 @@ It builds all the classes (in /lib)
 And makes all the web pages (in /www)
 
 # phpStartPoint
-phpStartPoint is a tool to help PHP programmers develop PHP code for database driven web applications quickly. The idea is that you build a database, and then you run this script which will produce PHP Classes and php web pages that can be used to control the data in the database. 
+phpStartPoint is a tool to help programmers start to develop PHP code for a database driven web application. The idea is that you build a database, and then you run this script which will produce PHP Class code, and php web pages that can be used to control the data in the database. 
 
 It builds PHP Class code, and web pages to list, add, edit and delete items from the database. What gets output is a starting point, and not all of the code will be useful or probably needed. 
 
