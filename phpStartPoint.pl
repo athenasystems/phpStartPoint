@@ -16,7 +16,7 @@ my $platform = &getPlatform();
 
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
-print "$spacer\n\nRunning ... php Start Point\n\n$spacer\nPlatform: $platform\n";
+print "$spacer\n\nRunning ... phpStartPoint\n\n$spacer\n\n";
 my $ans = '';
 
 # Get folder
@@ -34,14 +34,14 @@ else {
 }
 print "Installing to ... $dir\n";
 if ( -e $dir ) {
-	print "Warning: Everything in the folder $dir will be deleted OK?\n(Y/n): ";
+	print "Warning: Everything in the existing $dir folder will be toast OK?\n(Y/n): ";
 	ReadMode 4;
 	my $confirm = '';
 	while ( not defined( $confirm = ReadKey(-1) ) ) { }
 	chomp $confirm;
 	ReadMode 1;
 	print "\n";
-	if ( $confirm eq '' ) { $confirm = 'y' }
+	if ( $confirm eq '' ) { $confirm = 'y'; }
 
 	if ( $confirm eq 'n' ) {
 		print "OK quitting ...\n";
@@ -65,12 +65,14 @@ mkdir( $dir . '/www/css' );
 system("chown -R $user:$user $dir");
 
 # Import Example DB
-print "Would you like to install an example database to create PHP files from?\ny/N: ";
+print "Would you like to install the example database and run the script?\nY/n: ";
 ReadMode 4;
 while ( not defined( $ans = ReadKey(-1) ) ) { }
 ReadMode 1;
 chomp $ans;
+if ( $ans eq '' ) { $ans = 'y'; }
 print "\n\n";
+
 if ( $ans eq 'y' ) {
 	$db     = 'phpstartpoint';
 	$dbpw   = 'PHPSPPWD';
@@ -78,7 +80,7 @@ if ( $ans eq 'y' ) {
 	$host   = 'localhost';
 
 	# Get MySQL Root password
-	print "Type in the MySQL Root Password\n:";
+	print "Type in the MySQL Root Password: ";
 	ReadMode 4;
 	my $mysqlRootDbPwd = <STDIN>;
 	ReadMode 1;
@@ -671,12 +673,13 @@ sub setupApache {
 	if ( ( -e "/etc/apache2" ) || ( -e "/etc/httpd" ) ) {
 
 		print "Would you like to add a dummy domain to the Apache Web Server\n";
-		print "on this computer for you to view the php pages?\ny/N: ";
+		print "on this computer for you to view the php pages?\nY/n: ";
 		ReadMode 4;
 		while ( not defined( $doApace = ReadKey(-1) ) ) { }
 		ReadMode 1;
 		chomp $doApace;
 		print "\n";
+		if ( $doApace eq '' ) { $doApace = 'y'; }
 
 		if ( $doApace eq 'y' ) {
 			my $user = $>;
@@ -854,27 +857,26 @@ sub makeApacheConf() {
 </VirtualHost>
 ";
 
-	if ( -e "/etc/apache2/sites-available" ) {
 
+	print "\n\nMaking the Apache Virtual Host conf file\n\n";
+
+	if ( -e "/etc/apache2/sites-available" ) {
 		open( FH, ">/etc/apache2/sites-available/phpstartpoint.conf" );
 		print FH $apache2Conf;
 		close(FH);
+		print "\n\nApache2 Conf file written to /etc/apache2/sites-available/phpstartpoint.conf\n\n";
 		chdir('/etc/apache2/sites-available');
 		system("a2ensite phpstartpoint.conf");
-	}
-
-	if ( -e "/etc/apache2/vhosts.d/" ) {
-
+	}elsif ( -e "/etc/apache2/vhosts.d/" ) {
 		open( FH, ">/etc/apache2/vhosts.d/phpstartpoint.conf" );
 		print FH $apache2Conf;
 		close(FH);
-	}
-
-	if ( -e "/etc/httpd/conf.d/" ) {
-
+		print "\n\nApache2 Conf file written to /etc/apache2/vhosts.d/phpstartpoint.conf\n\n";
+	}elsif ( -e "/etc/httpd/conf.d/" ) {
 		open( FH, ">/etc/httpd/conf.d/phpstartpoint.conf" );
 		print FH $apache2Conf;
 		close(FH);
+		print "\n\nApache2 Conf file written to /etc/httpd/conf.d/phpstartpoint.conf\n\n";
 	}
 
 	if ( $platform eq 'suse' ) {
@@ -887,7 +889,7 @@ sub makeApacheConf() {
 		system("service httpd restart");
 	}
 
-	print "\n\nAdding the domain $domain to the /etc/hosts file\n\n";
+	print "\n\nAdding '127.0.0.1  $domain' to the /etc/hosts file\n\n";
 
 	my $hosttext = '';
 	open( FHH, "</etc/hosts" );
@@ -1307,6 +1309,8 @@ FLUSH PRIVILEGES;
 	print FH $sql;
 	close(FH);
 
+	print "Importing the example database into MySQL\n";
+
 	my $tmpFile = '/tmp/Athena.MyAcc' . time();
 	open( FHOUT, ">$tmpFile" );
 	print FHOUT "[mysql]\nuser=root\npassword=$sqlRootPwd";
@@ -1319,11 +1323,15 @@ FLUSH PRIVILEGES;
 	unlink($sqlFile);
 	unlink($tmpFile);
 
+	print "Added example database\n";
+
+	return 1;
+
 }
 
 sub getPlatform() {
 	my $q = `cat /etc/*-release`;
-	if ( $q =~ /openSUSE/s ) {
+	if ( $q =~ /SUSE/s ) {
 		return 'suse';
 	}
 	if ( $q =~ /Ubuntu/s ) {
