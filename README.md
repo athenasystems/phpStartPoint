@@ -16,7 +16,6 @@ If you want to run the pages in a browser you will need a web server,
 
 The script will create a folders 'etc', 'inc', 'lib' and 'www'.
 
- 
 In 'lib' it will write seperate class files for each table, as well as DB.php which is the interface to the DB. It will also create a file Classes.php which will contain all the classes in one file.  
 In 'www' it will write the php pages intended as a starting point for your development.  
 In 'etc' it will create a config file with your databases name, user and pass for the DB Class to use. This way it keeps it out of your code. If you chown yourusername:www-data and chmod 660, it will protect it from being read by normal users, but still be accesible by you and the Apache2 user.  
