@@ -2,7 +2,7 @@
 
 Have Linux. Have a database. Do ... 
 
-**wget -N http://athenace.co.uk/psp.sh && bash psp.sh**
+**wget -N http://athenace.co.uk/psp.sh && sudo bash psp.sh**
 
 It builds all the classes (in /lib)
 
@@ -30,7 +30,7 @@ You get a blank slate. The web pages have a very basic Bootstrap CSS setup and a
 
 Run this command in a terminal :-
 
-wget -N http://athenace.co.uk/psp.sh && bash psp.sh
+wget -N http://athenace.co.uk/psp.sh && sudo bash psp.sh
 
 The Bash script will check your OS and environment for required software. If you want to run the pages in a browser you will need a LAMP server, e.g. Linux, Apache, MySQL and PHP and a few extra programs (php5-mysql apache2-mod_php5 perl-DBD-mysql). 
 
