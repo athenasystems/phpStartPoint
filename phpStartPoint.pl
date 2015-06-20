@@ -56,7 +56,7 @@ if ( -e "$dir" ) {
 	system("rm -rf $dir");
 }
 
-mkdir($dir);
+system("mkdir -p $dir");
 mkdir( $dir . '/etc' );
 mkdir( $dir . '/inc' );
 mkdir( $dir . '/lib' );
@@ -836,8 +836,8 @@ EOF
 
 sub makeApacheConf() {
 	my $apache2Conf = "<VirtualHost *:80>
-	ServerName phpstartpoint.com
-	ServerAlias $domain
+	ServerName $domain
+	ServerAlias dev.$domain
 	DocumentRoot $dir/www
 	
 	 <Directory $dir/www/>
