@@ -11,13 +11,13 @@ phpStartPoint is a tool to help programmers start to develop PHP code for a data
 
 It also sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine, or a server. I even threw in a sample database to serve as an example for the curious.
 
-It aims to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. 
+It aim is to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. 
 
 # Building Classes
-This script will examine a MySQL database, and create object oriented php classes and php code for the web pages. It will create as many classes as there are tables, and provide an interface to load data into the object from the DB, update a DB record, insert a record into the DB, a delete a row from the DB.
+This script will examine a MySQL database, and create object oriented PHP classes and PHP code for the web pages. It will create as many classes as there are tables, and create web pages to add a new item, update a row, or delete a row from the database.
 
 # Bind Parameters
-The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and the script creates a php function that will automatically work out the bind_params format to pass to the function.
+The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and creates a php function that will automatically work out the bind_params format to pass to the function. This means you get nice clean functions, and it simplifies the coding later on.
 
 # It's Vanilla Flavoured
 You get a blank slate. The web pages have a very basic Bootstrap CSS setup and almost no design whatsoever. This is deliberate in order that you can apply whatever styling you wish.
