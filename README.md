@@ -14,12 +14,13 @@ The script will check your OS and environment for required software. You will ne
 
 If you want to run the pages in a browser you will need a web server, 
 
-The script will create a folders 'etc', 'inc', 'lib' and 'www'. 
+The script will create a folders 'etc', 'inc', 'lib' and 'www'.
 
-In 'etc' it will create a config file with your databases name, user and pass for the DB Class to use. This way it keeps it out of your code. If you chown yourusername:www-data and chmod 660, it will protect it from being read by normal users, but still be accesible by you and the Apache2 user.  
+ 
 In 'lib' it will write seperate class files for each table, as well as DB.php which is the interface to the DB. It will also create a file Classes.php which will contain all the classes in one file.  
-In 'inc' it will write the header and footer for the php pages.  
 In 'www' it will write the php pages intended as a starting point for your development.  
+In 'etc' it will create a config file with your databases name, user and pass for the DB Class to use. This way it keeps it out of your code. If you chown yourusername:www-data and chmod 660, it will protect it from being read by normal users, but still be accesible by you and the Apache2 user.  
+In 'inc' it will write the header and footer for the php pages.  
 
 # Bind parameters
 The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and the script creates a php function that will automatically work out the bind_params format to pass to the function.
