@@ -861,22 +861,22 @@ sub makeApacheConf() {
 	print "\n\nMaking the Apache Virtual Host conf file\n\n";
 
 	if ( -e "/etc/apache2/sites-available" ) {
-		open( FH, ">/etc/apache2/sites-available/phpstartpoint.conf" );
+		open( FH, ">/etc/apache2/sites-available/$domain.conf" );
 		print FH $apache2Conf;
 		close(FH);
-		print "\n\nApache2 Conf file written to /etc/apache2/sites-available/phpstartpoint.conf\n\n";
+		print "\n\nApache2 Conf file written to /etc/apache2/sites-available/$domain.conf\n\n";
 		chdir('/etc/apache2/sites-available');
-		system("a2ensite phpstartpoint.conf");
+		system("a2ensite $domain.conf");
 	}elsif ( -e "/etc/apache2/vhosts.d/" ) {
-		open( FH, ">/etc/apache2/vhosts.d/phpstartpoint.conf" );
+		open( FH, ">/etc/apache2/vhosts.d/$domain.conf" );
 		print FH $apache2Conf;
 		close(FH);
-		print "\n\nApache2 Conf file written to /etc/apache2/vhosts.d/phpstartpoint.conf\n\n";
+		print "\n\nApache2 Conf file written to /etc/apache2/vhosts.d/$domain.conf\n\n";
 	}elsif ( -e "/etc/httpd/conf.d/" ) {
-		open( FH, ">/etc/httpd/conf.d/phpstartpoint.conf" );
+		open( FH, ">/etc/httpd/conf.d/$domain.conf" );
 		print FH $apache2Conf;
 		close(FH);
-		print "\n\nApache2 Conf file written to /etc/httpd/conf.d/phpstartpoint.conf\n\n";
+		print "\n\nApache2 Conf file written to /etc/httpd/conf.d/$domain.conf\n\n";
 	}
 
 	if ( $platform eq 'suse' ) {
