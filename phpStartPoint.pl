@@ -10,8 +10,8 @@ my $host   = 'localhost';
 ###########################################################
 use DBI;
 use Term::ReadKey;
-my $dir = '/srv';
-my $user = (defined($ENV{"SUDO_USER"})) ? $ENV{"SUDO_USER"} : $ENV{"USER"}  ;
+my $dir      = '/srv';
+my $user     = ( defined( $ENV{"SUDO_USER"} ) ) ? $ENV{"SUDO_USER"} : $ENV{"USER"};
 my $platform = &getPlatform();
 
 system("clear");
@@ -26,15 +26,13 @@ ReadMode 1;
 $dir = <STDIN>;
 chomp $dir;
 
-if ((!defined($dir) )||( $dir eq '' )) {
+if ( ( !defined($dir) ) || ( $dir eq '' ) ) {
 	$dir = '/srv/phpstartpoint';
-}else{
+}
+else {
 	$dir .= '/phpstartpoint';
 }
 print "Installing to ... $dir\n";
-	
-
-
 if ( -e $dir ) {
 	print "Warning: Everything in the folder $dir will be deleted OK?\n(Y/n): ";
 	ReadMode 4;
@@ -44,11 +42,11 @@ if ( -e $dir ) {
 	ReadMode 1;
 	print "\n";
 	if ( $confirm eq '' ) { $confirm = 'y' }
+
 	if ( $confirm eq 'n' ) {
 		print "OK quitting ...\n";
 		exit;
 	}
-	
 
 }
 
@@ -58,14 +56,13 @@ if ( -e "$dir" ) {
 	system("rm -rf $dir");
 }
 
-mkdir( $dir );
+mkdir($dir);
 mkdir( $dir . '/etc' );
 mkdir( $dir . '/inc' );
 mkdir( $dir . '/lib' );
 mkdir( $dir . '/www' );
 mkdir( $dir . '/www/css' );
 system("chown -R $user:$user $dir");
-
 
 # Import Example DB
 print "Would you like to install an example database to create PHP files from?\ny/N: ";
@@ -100,7 +97,6 @@ print "$spacer\n\n";
 my $doApace = '';
 &setupApache;
 
-
 ## SQL query to get Table names from DB
 my $query   = "show tables";
 my $dbh     = DBI->connect( "DBI:mysql:$db:$host", $dbuser, $dbpw );
@@ -111,7 +107,7 @@ $sth->execute();
 # Generic footer for the PHP pages
 my $htmlFoot = '
 <?php
-include "'.$dir . '/inc/footer.php";
+include "' . $dir . '/inc/footer.php";
 ?>
 ';
 
@@ -137,7 +133,7 @@ my $allPHPClasses = '';
 my $phpOutTxtFull = '';
 my $htmlIndex     = '';
 my $outFormatsTxt = '';
-my $navHTML = '
+my $navHTML       = '
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -166,7 +162,7 @@ while ( my @row_array = $sth->fetchrow_array ) {
 	my $table            = $row_array[0];
 	my $bindValues       = "\n\ \$" . $table . "Formats= array(\n";
 	my $capTableName     = ucfirst($table);
-$navHTML .=<<EOF;
+	$navHTML .= <<EOF;
 <li><a href="/$table">$capTableName</a></li> 
 EOF
 
@@ -254,18 +250,18 @@ class $capTableName
 	}
 
 	my $htmlHead = '<?php	
-include "'.$dir . '/lib/DB.php";
+include "' . $dir . '/lib/DB.php";
 $db = new DB();
-include "'.$dir . '/lib/' . $capTableName . '.php";
-include "'.$dir . '/inc/header.php"; 
+include "' . $dir . '/lib/' . $capTableName . '.php";
+include "' . $dir . '/inc/header.php"; 
  
 
 ?>
 ';
 	my $htmlAddHead = '<?php	
-include "'.$dir . '/lib/DB.php";
+include "' . $dir . '/lib/DB.php";
 $db = new DB();
-include "'.$dir . '/lib/' . $capTableName . '.php"; 
+include "' . $dir . '/lib/' . $capTableName . '.php"; 
  
 
 ' . $goFuncStart . '
@@ -278,13 +274,13 @@ include "'.$dir . '/lib/' . $capTableName . '.php";
 	header("Location: /' . $table . '/?ItemAdded=y");
 
 }
-include "'.$dir . '/inc/header.php";
+include "' . $dir . '/inc/header.php";
 ?>
 ';
 	my $htmlEditHead = '<?php	
-include "'.$dir . '/lib/DB.php";
+include "' . $dir . '/lib/DB.php";
 $db = new DB();
-include "'.$dir . '/lib/' . $capTableName . '.php";
+include "' . $dir . '/lib/' . $capTableName . '.php";
 ' . $goFuncStart . '
 
 	# Update DB
@@ -293,7 +289,7 @@ include "'.$dir . '/lib/' . $capTableName . '.php";
 ' . $outEditFieldsTxt . '
 	$' . $table . 'Update->updateDB();
 }
-include "'.$dir . '/inc/header.php";
+include "' . $dir . '/inc/header.php";
 
 
 $' . $table . ' = new ' . $capTableName . '();
@@ -306,9 +302,9 @@ $all = $' . $table . '->getAll();
 ?>
 ';
 	my $htmlDeleteHead = '<?php	
-include "'.$dir . '/lib/DB.php";
+include "' . $dir . '/lib/DB.php";
 $db = new DB();
-include "'.$dir . '/lib/' . $capTableName . '.php";
+include "' . $dir . '/lib/' . $capTableName . '.php";
 ' . $goFuncStart . '
 
 	$' . $table . 'Delete = new ' . $capTableName . '();
@@ -319,7 +315,7 @@ include "'.$dir . '/lib/' . $capTableName . '.php";
     
     exit();
 }
-include "'.$dir . '/inc/header.php";
+include "' . $dir . '/inc/header.php";
 ?>
 ';
 
@@ -571,9 +567,9 @@ ul, ol {
 
 close(FH);
 
-$navHTML=~s/ \| $//s;
+$navHTML =~ s/ \| $//s;
 
-$navHTML =<<EOF;
+$navHTML = <<EOF;
 $navHTML
 </ul></div>
 </div></nav>
@@ -585,12 +581,11 @@ my $bootstrap = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bo
 <link href="/css/sitestyle.css" rel="stylesheet"> 
 ';
 
-
 print "$spacer\nCreating headers and footers for the web pages $dir/inc\n";
 open( FH, ">$dir/inc/header.php" );
 print FH '<!DOCTYPE html><html><head><meta charset="UTF-8">
 <title></title>
-'.$bootstrap.'
+' . $bootstrap . '
 </head><body>' . $navHTML;
 close(FH);
 
@@ -598,17 +593,16 @@ open( FH, ">$dir/inc/footer.php" );
 print FH '</body></html>';
 close(FH);
 
-	$htmlIndex .= <<EOF;
+$htmlIndex .= <<EOF;
 <div style="margin:60px;">phpStartPoint gives developers a way to create a coding <br>
 environment quickly to allow rapid development of solutions<br> 
 blah blah blah ... <br><br><br>
 tl:dr use it if helps :) </div>
 EOF
 
-
 print "$spacer\nCreating the Index web page in $dir/www/index.php\n";
 open( FH, ">$dir/www/index.php" );
-print FH '<?php include "'.$dir . '/inc/header.php"; ?>' . $htmlIndex . '<?php include "'.$dir . '/inc/footer.php";?>';
+print FH '<?php include "' . $dir . '/inc/header.php"; ?>' . $htmlIndex . '<?php include "' . $dir . '/inc/footer.php";?>';
 close(FH);
 
 $sth->finish;
@@ -618,7 +612,7 @@ $sth->finish;
 
 system("chown -R $user:$user $dir");
 
-if ($platform =~  /^(fedora|redhat)$/){
+if ( $platform =~ /^(fedora|redhat)$/ ) {
 	my $parentDir = $dir;
 	$parentDir =~ s/\/phpstartpoint//;
 	print "Doing SE permissions on $parentDir\n";
@@ -633,7 +627,6 @@ if ( $doApace eq 'y' ) {
 	print "The Apache web root is $dir/www\n\n";
 	print "Go to http://$domain in a brower\n\n";
 }
-
 
 exit;
 
@@ -673,8 +666,9 @@ sub getDomain {
 }
 
 sub setupApache {
-#	my $apacheInstalled = `dpkg --get-selections | grep apache`;
-	if (( -e "/etc/apache2" ) || ( -e "/etc/httpd")){
+
+	#	my $apacheInstalled = `dpkg --get-selections | grep apache`;
+	if ( ( -e "/etc/apache2" ) || ( -e "/etc/httpd" ) ) {
 
 		print "Would you like to add a dummy domain to the Apache Web Server\n";
 		print "on this computer for you to view the php pages?\ny/N: ";
@@ -860,38 +854,38 @@ sub makeApacheConf() {
 </VirtualHost>
 ";
 
-if( -e "/etc/apache2/sites-available"){
-	
-	open( FH, ">/etc/apache2/sites-available/phpstartpoint.conf" );
-	print FH $apache2Conf;
-	close(FH);
-	chdir('/etc/apache2/sites-available');
-	system("a2ensite phpstartpoint.conf");
-}
+	if ( -e "/etc/apache2/sites-available" ) {
 
-if( -e "/etc/apache2/vhosts.d/"){
-	
-	open( FH, ">/etc/apache2/vhosts.d/phpstartpoint.conf" );
-	print FH $apache2Conf;
-	close(FH);
-}
+		open( FH, ">/etc/apache2/sites-available/phpstartpoint.conf" );
+		print FH $apache2Conf;
+		close(FH);
+		chdir('/etc/apache2/sites-available');
+		system("a2ensite phpstartpoint.conf");
+	}
 
-if( -e "/etc/httpd/conf.d/"){
-	
-	open( FH, ">/etc/httpd/conf.d/phpstartpoint.conf" );
-	print FH $apache2Conf;
-	close(FH);
-}
+	if ( -e "/etc/apache2/vhosts.d/" ) {
 
-if ($platform eq 'suse'){
-	system("rcapache2 restart");
-}
-if ($platform =~  /^(debain|ubuntu|mint)$/){
-	system("service apache2 restart");
-}
-if ($platform =~  /^(fedora|redhat)$/){
-	system("service httpd restart");
-}
+		open( FH, ">/etc/apache2/vhosts.d/phpstartpoint.conf" );
+		print FH $apache2Conf;
+		close(FH);
+	}
+
+	if ( -e "/etc/httpd/conf.d/" ) {
+
+		open( FH, ">/etc/httpd/conf.d/phpstartpoint.conf" );
+		print FH $apache2Conf;
+		close(FH);
+	}
+
+	if ( $platform eq 'suse' ) {
+		system("rcapache2 restart");
+	}
+	if ( $platform =~ /^(debain|ubuntu|mint)$/ ) {
+		system("service apache2 restart");
+	}
+	if ( $platform =~ /^(fedora|redhat)$/ ) {
+		system("service httpd restart");
+	}
 
 	print "\n\nAdding the domain $domain to the /etc/hosts file\n\n";
 
@@ -1327,24 +1321,24 @@ FLUSH PRIVILEGES;
 
 }
 
-sub getPlatform(){
+sub getPlatform() {
 	my $q = `cat /etc/*-release`;
-	if($q =~ /openSUSE/s){
+	if ( $q =~ /openSUSE/s ) {
 		return 'suse';
 	}
-	if($q =~ /Ubuntu/s){
+	if ( $q =~ /Ubuntu/s ) {
 		return 'ubuntu';
 	}
-	if($q =~ /LinuxMint/s){
+	if ( $q =~ /LinuxMint/s ) {
 		return 'mint';
 	}
-	if($q =~ /Debian/s){
+	if ( $q =~ /Debian/s ) {
 		return 'debian';
 	}
-	if($q =~ /Fedora/s){
+	if ( $q =~ /Fedora/s ) {
 		return 'fedora';
 	}
-	if($q =~ /Red Hat/s){
+	if ( $q =~ /Red Hat/s ) {
 		return 'redhat';
 	}
 	return 'unknown';

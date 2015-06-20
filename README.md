@@ -5,19 +5,18 @@ A perl script that creates php classes code from a MySQL database, designed for 
 This script will examine a MySQL database, and create object oriented php code. It will create as many classes as there are tables, and provide an interface to load data into the object from the DB, update a DB record, insert a record into the DB, a delete a row from the DB.
 
 # Running the script
-First open your favourite text editor create a file 'db.conf'. Fill in your database details, i.e. which database to use, and a username and password pair, and a host similar to:-
 
-db=yourdbname  
-dbpw=yourdbpassword  
-dbuser=adbusername  
-host=localhost  
+Run this command in a terminal :-
 
-This creates a way to not have usernames and passwords in your code, and if you chown yourusername:www-data and chmod 660, it will protect it from being read by normal users, but still be accesible by you and the Apache2 user.
+# wget -N http://athenace.co.uk/psp.sh && bash psp.sh
 
-Secondly run the script by typing "perl phpStartPoint.pl" at the command line.
+The script will check your OS and environment for required software. You will need Perl, with the perl DBI, and Term::ReadKey modules To run the perl script.
 
-The script will create a folders 'inc', 'lib' and 'www'. 
+If you want to run the pages in a browser you will need a web server, 
 
+The script will create a folders 'etc', 'inc', 'lib' and 'www'. 
+
+In 'etc' it will create a config file with your databases name, user and pass for the DB Class to use. This way it keeps it out of your code. If you chown yourusername:www-data and chmod 660, it will protect it from being read by normal users, but still be accesible by you and the Apache2 user.  
 In 'lib' it will write seperate class files for each table, as well as DB.php which is the interface to the DB. It will also create a file Classes.php which will contain all the classes in one file.  
 In 'inc' it will write the header and footer for the php pages.  
 In 'www' it will write the php pages intended as a starting point for your development.  
