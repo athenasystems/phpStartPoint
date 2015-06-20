@@ -2,7 +2,7 @@
 
 Have Linux. Have a database. Do ... 
 
-**wget -N http://athenace.co.uk/psp.sh && sudo bash psp.sh**
+**wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/phpstartpoint-linux.sh && sudo bash psp.sh**
 
 It builds all the classes (in /lib)
 
