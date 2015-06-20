@@ -9,8 +9,9 @@ It builds all the classes (in /lib)
 And makes all the web pages (in /www).
 
 # phpStartPoint
-phpStartPoint is a tool to help PHP programmers develop code for database driven web applications quickly. The idea is that you build a database, and then you run this script which will produce PHP Classes and php web pages that can be used to control the data in the database. It also sets up Apache2, add the neccesary software and configuration to get a working developmeny set up on the developers machine.
+phpStartPoint is a tool to help PHP programmers develop code for database driven web applications quickly. The idea is that you build a database, and then you run this script which will produce PHP Classes and php web pages that can be used to control the data in the database. 
 
+It also sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine.
 
 phpStartPoint is a perl script that creates php classes code from a MySQL database, designed for a Linux system, but could easily be modified for Windows.
 
@@ -23,13 +24,22 @@ Run this command in a terminal :-
 
 wget -N http://athenace.co.uk/psp.sh && bash psp.sh
 
-The script will check your OS and environment for required software. 
+The Bash script will check your OS and environment for required software. If you want to run the pages in a browser you will need a LAMP server, e.g. Linux, Apache, MySQL and PHP and a few extra programs (php5-mysql apache2-mod_php5 perl-DBD-mysql). 
 
-If you want to run the pages in a browser you will need a LAMP server, e.g. Linux, Apache, MySQL and PHP and a few extra programs (php5-mysql apache2-mod_php5 perl-DBD-mysql). The script will make attempts to install and setup a development enviroment for you.
+The script will make attempts to install and setup a development enviroment for you.
 
-the psp.sh script then tries to downlaod and run the actual ,
+The psp.sh script then tries to download the phpStartPoint script (from http://athenace.co.uk/phpStartPoint). It then sets permissions (chmod 755), and runs it (perl ./phpStartPoint).
 
-The script will create a folders 'etc', 'inc', 'lib' and 'www'.
+# Example Database
+I have included a very simple example database if you want to see the script before you try it on your own Database. When the script runs it will ask you if you want to try it.
+
+If you are running the script to analyse your own database, you will be asked for the details of your database, user pass etc.
+
+# Apache2 Virtual Host
+You will be asked if you want to set up the web server on your development computer, and if so, it will create a .conf file and add it to the sites on your web server. It will also add entries in your /etc/hosts file to point (via 127.0.0.1) to the development version domain, as specified at Install.
+
+# Output Files
+The script will create folders 'etc', 'inc', 'lib' and 'www' in the location you chose at install.
 
 In 'lib' it will write seperate class files for each table, as well as DB.php which is the interface to the DB. It will also create a file Classes.php which will contain all the classes in one file.  
 In 'www' it will write the php pages intended as a starting point for your development.  
@@ -38,7 +48,6 @@ In 'inc' it will write the header and footer for the php pages.
 
 
 # Just running the phpStartPoint script
-
 You can just run the **phpStartPoint.pl** script in this package. You will need Perl, with the perl DBI, and Term::ReadKey modules i.e. perl-DBI perl-Term-ReadKey on debian based OS, or perl-DBI perl-TermReadKey on a RedHat based distro.
 
 
