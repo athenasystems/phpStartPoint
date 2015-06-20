@@ -1,10 +1,18 @@
-# phpStartPoint
-phpStartPoint is a perl script that creates php classes code from a MySQL database, designed for a Linux system, but could easily be modified for Windows. The idea is that when starting a project you can start by building the database, and then next run this script which will produce PHP Classes and php web pages that can be used to control the data in the database.
-
 # TL;DR verison
+
+Have Linux. Do ... 
 
 wget -N http://athenace.co.uk/psp.sh && bash psp.sh
 
+It builds all the classes (in /lib)
+
+And makes all the web pages (in /www).
+
+# phpStartPoint
+phpStartPoint is a tool to help PHP programmers develop code for database driven web applications quickly. The idea is that you build a database, and then you run this script which will produce PHP Classes and php web pages that can be used to control the data in the database. It also sets up Apache2, add the neccesary software and configuration to get a working developmeny set up on the developers machine.
+
+
+phpStartPoint is a perl script that creates php classes code from a MySQL database, designed for a Linux system, but could easily be modified for Windows.
 
 # Building Classes
 This script will examine a MySQL database, and create object oriented php classes and php code for the web pages. It will create as many classes as there are tables, and provide an interface to load data into the object from the DB, update a DB record, insert a record into the DB, a delete a row from the DB.
@@ -13,9 +21,13 @@ This script will examine a MySQL database, and create object oriented php classe
 
 Run this command in a terminal :-
 
-**wget -N http://athenace.co.uk/psp.sh && bash psp.sh**
+wget -N http://athenace.co.uk/psp.sh && bash psp.sh
 
-The script will check your OS and environment for required software. If you want to run the pages in a browser you will need a LAMP server, e.g. Linux, Apache, MySQL and PHP and a few extra programs (php5-mysql apache2-mod_php5 perl-DBD-mysql). The script will make attempts to install and setup a development enviroment for you.
+The script will check your OS and environment for required software. 
+
+If you want to run the pages in a browser you will need a LAMP server, e.g. Linux, Apache, MySQL and PHP and a few extra programs (php5-mysql apache2-mod_php5 perl-DBD-mysql). The script will make attempts to install and setup a development enviroment for you.
+
+the psp.sh script then tries to downlaod and run the actual ,
 
 The script will create a folders 'etc', 'inc', 'lib' and 'www'.
 
