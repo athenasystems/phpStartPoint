@@ -1,7 +1,7 @@
 # tl;dr version
-Have Linux. In a terminal do ... 
+Have Linux. In a terminal as root do ... 
 
-`wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/psp.sh && sudo bash psp.sh`
+`wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/psp.sh && bash psp.sh`
 
 It builds all the classes (in /lib)  
 And makes all the web pages (in /www)

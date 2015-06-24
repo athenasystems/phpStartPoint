@@ -1,6 +1,6 @@
 # To set up a development environment
 
-Run this command in a terminal :-
+Run this command as root, or via sudo, in a terminal :-
 
 `wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/psp.sh && bash psp.sh`
 
