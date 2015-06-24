@@ -197,9 +197,9 @@ if [ "$resp" = "" ]; then
 	resp=y
 fi
 if [ "$resp" = "y" ]; then
-	wget -N http://athenace.co.uk/phpStartPoint
-	chmod 755 phpStartPoint
-	perl ./phpStartPoint
+	wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/phpStartPoint.pl
+	chmod 755 phpStartPoint.pl
+	perl ./phpStartPoint.pl
 else
 	echo "Quiting"
 fi

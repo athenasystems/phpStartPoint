@@ -2,13 +2,13 @@
 
 Run this command in a terminal :-
 
-wget -N http://athenace.co.uk/psp.sh && sudo bash psp.sh
+wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/psp.sh && bash psp.sh
 
 The Bash script will check your OS and environment for required software. If you want to run the pages in a browser you will need a LAMP server, e.g. Linux, Apache, MySQL and PHP and a few extra programs (php5-mysql apache2-mod_php5 perl-DBD-mysql). 
 
 The script will make attempts to install and setup a development enviroment for you.
 
-The psp.sh script will then download the phpStartPoint perl script (from http://athenace.co.uk/phpStartPoint). It sets permissions (chmod 755), and runs it (perl ./phpStartPoint).
+The psp.sh script will then download the phpStartPoint perl script (from https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/phpStartPoint.pl). It sets permissions (chmod 755), and runs it (perl ./phpStartPoint.pl).
 
 # Example Database
 I have included a very simple example database if you want to see the script before you try it on your own Database. When the script runs it will ask you if you want to try it.
