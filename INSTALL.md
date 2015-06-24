@@ -2,7 +2,7 @@
 
 Run this command in a terminal :-
 
-wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/psp.sh && bash psp.sh
+`wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/psp.sh && bash psp.sh`
 
 The Bash script will check your OS and environment for required software. If you want to run the pages in a browser you will need a LAMP server, e.g. Linux, Apache, MySQL and PHP and a few extra programs (php5-mysql apache2-mod_php5 perl-DBD-mysql). 
 
