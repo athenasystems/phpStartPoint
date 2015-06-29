@@ -120,7 +120,7 @@ if [[ $platform == 'debian' ]]; then
 			   echo "This script must be run as root" 1>&2
 			   exit 1
 			fi
-			apt-get -y install apache2 libapache2-mod-php5  libapache2-mod-auth-mysql
+			apt-get -y install apache2 libapache2-mod-php5
 		else
 		echo "Ok ... skipping"
 		fi

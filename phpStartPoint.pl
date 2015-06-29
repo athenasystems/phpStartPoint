@@ -19,92 +19,16 @@ my $spacer = '------------------------------------------------------------------
 print "$spacer\n\nRunning ... phpStartPoint\n\n$spacer\n\n";
 my $ans = '';
 
-# Get folder
-print "Where shall I put the 'phpstartpoint' folder for the php files?\n";
-print "Default is /srv meaning the files will live in /srv/phpstartpoint\n($dir): ";
-ReadMode 1;
-$dir = <STDIN>;
-chomp $dir;
+&makeDirectory();
 
-if ( ( !defined($dir) ) || ( $dir eq '' ) ) {
-	$dir = '/srv/phpstartpoint';
-}
-else {
-	$dir .= '/phpstartpoint';
-}
-print "Installing to ... $dir\n";
-if ( -e $dir ) {
-	print "Warning: Everything in the existing $dir folder will be toast OK?\n(Y/n): ";
-	ReadMode 4;
-	my $confirm = '';
-	while ( not defined( $confirm = ReadKey(-1) ) ) { }
-	chomp $confirm;
-	ReadMode 1;
-	print "\n";
-	if ( $confirm eq '' ) { $confirm = 'y'; }
-
-	if ( $confirm eq 'n' ) {
-		print "OK quitting ...\n";
-		exit;
-	}
-
-}
-
-if ( -e "$dir" ) {
-
-	# Clearing any previously made scripts
-	system("rm -rf $dir");
-}
-
-system("mkdir -p $dir");
-mkdir( $dir . '/etc' );
-mkdir( $dir . '/tmpl' );
-mkdir( $dir . '/lib' );
-mkdir( $dir . '/www' );
-mkdir( $dir . '/www/css' );
-system("chown -R $user:$user $dir");
-
-# Import Example DB
-print "Would you like to install the example database and run the script?\nY/n: ";
-ReadMode 4;
-while ( not defined( $ans = ReadKey(-1) ) ) { }
-ReadMode 1;
-chomp $ans;
-if ( $ans eq '' ) { $ans = 'y'; }
-print "\n\n";
-
-if ( $ans eq 'y' ) {
-	$db     = 'phpstartpoint';
-	$dbpw   = 'PHPSPPWD';
-	$dbuser = 'athena';
-	$host   = 'localhost';
-
-	# Get MySQL Root password
-	print "Type in the MySQL Root Password: ";
-	ReadMode 4;
-	my $mysqlRootDbPwd = <STDIN>;
-	ReadMode 1;
-	chomp $mysqlRootDbPwd;
-	print "\n";
-	&makeDB($mysqlRootDbPwd);
-}
-else {
-	if ( $db     eq '' ) { $db     = &getDBName(); }
-	if ( $dbuser eq '' ) { $dbuser = &getDBUser(); }
-	if ( $dbpw   eq '' ) { $dbpw   = &getDBPwd(); }
-}
+&doDatabase();
 
 print "$spacer\n\n";
 
 my $doApace = '';
 &setupApache;
 
-## SQL query to get Table names from DB
-my $query   = "show tables";
-my $dbh     = DBI->connect( "DBI:mysql:$db:$host", $dbuser, $dbpw );
-my $sqltext = "show tables";
-my $sth     = $dbh->prepare($sqltext);
-$sth->execute();
+my $dbh = DBI->connect( "DBI:mysql:$db:$host", $dbuser, $dbpw );
 
 # Generic footer for the PHP pages
 my $htmlFoot = '
@@ -125,10 +49,7 @@ my $formEditTagStart = '<form role="form" action="<?php echo $_SERVER[\'PHP_SELF
 my $goFuncStart = 'if ((isset($_GET[\'go\'])) && ($_GET[\'go\'] == "y")) {';
 my $goFuncEnd   = '}';
 
-my $credConf = "db=$db\ndbpw=$dbpw\ndbuser=$dbuser\nhost=$host";
-open( FH, ">$dir/etc/db.conf" );
-print FH $credConf;
-close(FH);
+&outputCredFile();
 
 # Strings to use for concatenation in the Table and Column loops
 my $allPHPClasses = '';
@@ -152,6 +73,11 @@ my $navHTML       = '
 			<ul class="nav navbar-nav">';
 
 print "\n$spacer\nRunning phpStartPoint on the $db database...\n$spacer\n";
+
+## SQL query to get Table names from DB
+my $sqltext = "show tables";
+my $sth     = $dbh->prepare($sqltext);
+$sth->execute();
 
 # Loop the Tables
 while ( my @row_array = $sth->fetchrow_array ) {
@@ -426,7 +352,7 @@ if (! empty($res)) {
 		if(!isset($this->' . $indexFeild . ')){
 			return "No ' . $capTableName . ' ID";
 		}		
-    	$res = $db->select(\'SELECT ' 
+		$res = $db->select(\'SELECT ' 
 	  . $colList 
 	  . ' FROM ' 
 	  . $table
@@ -446,20 +372,17 @@ if (! empty($res)) {
 		global $db;
 		global $' . $table . 'Formats;
 		
-	    $format = \'\';
-	    foreach($this as $key => $value) {
-	    	if($key == \'' . $indexFeild . '\'){continue;}
-	        if (isset($this->$key)) {
-	            $data[$key] = $value;
-	            $format .= $' . $table . 'Formats[$key];
-	        }
-	    }
-	     
-	    $res = $db->update(\'' . $table . '\', $data, $format, array(\'' . $indexFeild . '\'=>$this->' . $indexFeild . '), \'i\');
-	    
-	    return $res;
+		$format = \'\';
+		foreach($this as $key => $value) {
+			if($key == \'' . $indexFeild . '\'){continue;}
+			if (isset($this->$key)) {
+				$data[$key] = $value;
+				$format .= $' . $table . 'Formats[$key];
+			}
+		}
+		$res = $db->update(\'' . $table . '\', $data, $format, array(\'' . $indexFeild . '\'=>$this->' . $indexFeild . '), \'i\');	    
+		return $res;
 	}
-
 ';
 
 	my $insertToDBFunction = '
@@ -467,35 +390,29 @@ if (! empty($res)) {
 	public function insertIntoDB() {
 		global $db;
 		global $' . $table . 'Formats;
-	    $format = \'\';
-		foreach($this as $key => $value) {	    	
+		$format = \'\';
+		foreach($this as $key => $value) {
 	        if (isset($this->$key)) {
 	            $data[$key] = $value;
 	            $format .= $' . $table . 'Formats[$key];
-	        }
-	    }
-		 $res = $db->insert(\'' . $table . '\', $data, $format);
-	    
-	    return $res;
-		
+			}
+		}
+		$res = $db->insert(\'' . $table . '\', $data, $format);
+		return $res;
 	}
 ';
 
 	my $deleteFromDBFunction = '
 
 	 public function deleteFromDB() {
-
-        global $db;
-        
-        if(!isset($this->' . $indexFeild . ')){
+		global $db;
+		        
+		if(!isset($this->' . $indexFeild . ')){
 			return "No ' . $capTableName . ' ID";
 		}
-        $res = $db->delete(\'' . $table . '\', $this->' . $indexFeild . ', \'' . $indexFeild . '\');
-         
-        return $res;
-        
+		$res = $db->delete(\'' . $table . '\', $this->' . $indexFeild . ', \'' . $indexFeild . '\');
+		return $res;
     }
-
 ';
 
 	$bindValues =~ s/,\n$//s;
@@ -525,12 +442,12 @@ if (! empty($res)) {
 	print "& PHP Class\n";
 	open( FH, ">$dir/lib/$capTableName.php" );
 	print FH '<?php' . $phpClass . "
-
 ?>";
 	close(FH);
 
 	$outFormatsTxt .= $bindValues;
 }
+
 open( FH, ">$dir/lib/Classes.php" );
 print FH '<?php' . $allPHPClasses . "
 
@@ -538,9 +455,143 @@ $outFormatsTxt
 
 ?>";
 close(FH);
+&makeStyleSheet();
 
-open( FH, ">$dir/www/css/sitestyle.css" );
-print FH '@CHARSET "UTF-8";
+$navHTML =~ s/ \| $//s;
+
+$navHTML = <<EOF;
+$navHTML
+</ul></div>
+</div></nav>
+EOF
+
+&makeTemplate();
+
+$htmlIndex .= <<EOF;
+<div style="margin:60px;">phpStartPoint gives developers a way to create a coding <br>
+environment quickly to allow rapid development of solutions<br> 
+blah blah blah ... <br><br><br>
+tl:dr use it if helps :) </div>
+EOF
+
+print "$spacer\nCreating the Index web page in $dir/www/index.php\n";
+open( FH, ">$dir/www/index.php" );
+print FH '<?php include "../tmpl/header.php"; ?>' . $htmlIndex . '<?php include "../tmpl/footer.php";?>';
+close(FH);
+
+$sth->finish;
+
+# Write out the DB Class file
+&makeDBClass();
+
+&doPermissions();
+
+print "Credentials file is stored at $dir/etc/db.conf\n\n";
+print "PHP Classes files are stored at $dir/lib\n\n";
+print "Web pages are stored at $dir/www\n\n";
+if ( $doApace eq 'y' ) {
+	print "The Apache web root is $dir/www\n\n";
+	print "Go to http://$domain in a brower\n\n";
+}
+
+exit;
+
+sub outputCredFile {
+
+	my $credConf = "db=$db\ndbpw=$dbpw\ndbuser=$dbuser\nhost=$host";
+	open( FH, ">$dir/etc/db.conf" );
+	print FH $credConf;
+	close(FH);
+
+}
+
+sub doDatabase {
+
+	# Import Example DB
+	print "Would you like to install the example database and run the script?\nY/n: ";
+	ReadMode 4;
+	while ( not defined( $ans = ReadKey(-1) ) ) { }
+	ReadMode 1;
+	chomp $ans;
+	if ( $ans eq '' ) { $ans = 'y'; }
+	print "\n\n";
+
+	if ( $ans eq 'y' ) {
+		$db     = 'phpstartpoint';
+		$dbpw   = 'PHPSPPWD';
+		$dbuser = 'athena';
+		$host   = 'localhost';
+
+		# Get MySQL Root password
+		print "Type in the MySQL Root Password: ";
+		ReadMode 4;
+		my $mysqlRootDbPwd = <STDIN>;
+		ReadMode 1;
+		chomp $mysqlRootDbPwd;
+		print "\n";
+		&makeDB($mysqlRootDbPwd);
+	}
+	else {
+		if ( $db     eq '' ) { $db     = &getDBName(); }
+		if ( $dbuser eq '' ) { $dbuser = &getDBUser(); }
+		if ( $dbpw   eq '' ) { $dbpw   = &getDBPwd(); }
+	}
+
+}
+
+sub makeDirectory {
+
+	# Get folder
+	print "Where shall I put the 'phpstartpoint' folder for the php files?\n";
+	print "Default is /srv meaning the files will live in /srv/phpstartpoint\n($dir): ";
+	ReadMode 1;
+	$dir = <STDIN>;
+	chomp $dir;
+
+	if ( ( !defined($dir) ) || ( $dir eq '' ) ) {
+		$dir = '/srv/phpstartpoint';
+	}
+	else {
+		$dir .= '/phpstartpoint';
+	}
+	print "Installing to ... $dir\n";
+	if ( -e $dir ) {
+		print "Warning: Everything in the existing $dir folder will be toast OK?\n(Y/n): ";
+		ReadMode 4;
+		my $confirm = '';
+		while ( not defined( $confirm = ReadKey(-1) ) ) { }
+		chomp $confirm;
+		ReadMode 1;
+		print "\n";
+		if ( $confirm eq '' ) { $confirm = 'y'; }
+
+		if ( $confirm eq 'n' ) {
+			print "OK quitting ...\n";
+			exit;
+		}
+
+	}
+
+	if ( -e "$dir" ) {
+
+		# Clearing any previously made scripts
+		system("rm -rf $dir");
+	}
+
+	system("mkdir -p $dir");
+	mkdir( $dir . '/etc' );
+	mkdir( $dir . '/tmpl' );
+	mkdir( $dir . '/lib' );
+	mkdir( $dir . '/www' );
+	mkdir( $dir . '/www/css' );
+	system("chown -R $user:$user $dir");
+
+}
+
+sub makeStyleSheet {
+
+	open( FH, ">$dir/www/css/sitestyle.css" );
+	print FH '@CHARSET "UTF-8";
 
 body {
 	padding-top: 70px;
@@ -568,70 +619,45 @@ ul, ol {
 };
 ';
 
-close(FH);
+	close(FH);
 
-$navHTML =~ s/ \| $//s;
+}
 
-$navHTML = <<EOF;
-$navHTML
-</ul></div>
-</div></nav>
-EOF
+sub makeTemplate {
 
-my $bootstrap = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	my $bootstrap = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <link href="/css/sitestyle.css" rel="stylesheet"> 
 ';
 
-print "$spacer\nCreating headers and footers for the web pages $dir/inc\n";
-open( FH, ">$dir/tmpl/header.php" );
-print FH '<!DOCTYPE html><html><head><meta charset="UTF-8">
+	print "$spacer\nCreating headers and footers for the web pages $dir/inc\n";
+	open( FH, ">$dir/tmpl/header.php" );
+	print FH '<!DOCTYPE html><html><head><meta charset="UTF-8">
 <title></title>
 ' . $bootstrap . '
 </head><body>' . $navHTML;
-close(FH);
+	close(FH);
 
-open( FH, ">$dir/tmpl/footer.php" );
-print FH '</body></html>';
-close(FH);
+	open( FH, ">$dir/tmpl/footer.php" );
+	print FH '</body></html>';
+	close(FH);
 
-$htmlIndex .= <<EOF;
-<div style="margin:60px;">phpStartPoint gives developers a way to create a coding <br>
-environment quickly to allow rapid development of solutions<br> 
-blah blah blah ... <br><br><br>
-tl:dr use it if helps :) </div>
-EOF
-
-print "$spacer\nCreating the Index web page in $dir/www/index.php\n";
-open( FH, ">$dir/www/index.php" );
-print FH '<?php include "../tmpl/header.php"; ?>' . $htmlIndex . '<?php include "../tmpl/footer.php";?>';
-close(FH);
-
-$sth->finish;
-
-# Write out the DB Class file
-&makeDBClass();
-
-system("chown -R $user:$user $dir");
-
-if ( $platform =~ /^(fedora|redhat)$/ ) {
-	my $parentDir = $dir;
-	$parentDir =~ s/\/phpstartpoint//;
-	print "Doing SE permissions on $parentDir\n";
-	system("semanage fcontext -a -t public_content_rw_t \"$parentDir(/.*)?\" > /dev/null 2>&1");
-	system("restorecon -R -v $parentDir/ > /dev/null 2>&1");
 }
 
-print "Credentials file is stored at $dir/etc/db.conf\n\n";
-print "PHP Classes files are stored at $dir/lib\n\n";
-print "Web pages are stored at $dir/www\n\n";
-if ( $doApace eq 'y' ) {
-	print "The Apache web root is $dir/www\n\n";
-	print "Go to http://$domain in a brower\n\n";
-}
+sub doPermissions {
 
-exit;
+	system("chown -R $user:$user $dir");
+
+	if ( $platform =~ /^(fedora|redhat)$/ ) {
+		my $parentDir = $dir;
+		$parentDir =~ s/\/phpstartpoint//;
+		print "Doing SE permissions on $parentDir\n";
+		system("semanage fcontext -a -t public_content_rw_t \"$parentDir(/.*)?\" > /dev/null 2>&1");
+		system("restorecon -R -v $parentDir/ > /dev/null 2>&1");
+	}
+
+}
 
 sub getDBName {
 	print "Enter the name of the database you would like to analyse: ";
@@ -858,7 +884,6 @@ sub makeApacheConf() {
 </VirtualHost>
 ";
 
-
 	print "\n\nMaking the Apache Virtual Host conf file\n\n";
 
 	if ( -e "/etc/apache2/sites-available" ) {
@@ -868,12 +893,14 @@ sub makeApacheConf() {
 		print "\n\nApache2 Conf file written to /etc/apache2/sites-available/$domain.conf\n\n";
 		chdir('/etc/apache2/sites-available');
 		system("a2ensite $domain.conf");
-	}elsif ( -e "/etc/apache2/vhosts.d/" ) {
+	}
+	elsif ( -e "/etc/apache2/vhosts.d/" ) {
 		open( FH, ">/etc/apache2/vhosts.d/$domain.conf" );
 		print FH $apache2Conf;
 		close(FH);
 		print "\n\nApache2 Conf file written to /etc/apache2/vhosts.d/$domain.conf\n\n";
-	}elsif ( -e "/etc/httpd/conf.d/" ) {
+	}
+	elsif ( -e "/etc/httpd/conf.d/" ) {
 		open( FH, ">/etc/httpd/conf.d/$domain.conf" );
 		print FH $apache2Conf;
 		close(FH);
