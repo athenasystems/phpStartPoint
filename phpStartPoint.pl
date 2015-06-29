@@ -360,8 +360,8 @@ if (! empty($res)) {
 	  . $indexFeild
 	  . '=?\', array($this->'
 	  . $indexFeild
-	  . '), \'d\');		
-		$r=$res[0];    
+	  . '), \'d\');
+		$r=$res[0];
 ' . $loadFromDB . '
 	}
 ';
