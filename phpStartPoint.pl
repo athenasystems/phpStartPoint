@@ -33,7 +33,7 @@ my $dbh = DBI->connect( "DBI:mysql:$db:$host", $dbuser, $dbpw );
 # Generic footer for the PHP pages
 my $htmlFoot = '
 <?php
-include "../tmpl/footer.php";
+include "' . $dir . '/tmpl/footer.php";
 ?>
 ';
 
@@ -181,7 +181,7 @@ class $capTableName
 include "' . $dir . '/lib/DB.php";
 $db = new DB();
 include "' . $dir . '/lib/' . $capTableName . '.php";
-include "../tmpl/header.php"; 
+include "' . $dir . '/tmpl/header.php"; 
  
 
 ?>
@@ -202,7 +202,7 @@ include "' . $dir . '/lib/' . $capTableName . '.php";
 	header("Location: /' . $table . '/?ItemAdded=y");
 
 }
-include "../tmpl/header.php";
+include "' . $dir . '/tmpl/header.php";
 ?>
 ';
 	my $htmlEditHead = '<?php	
@@ -217,7 +217,7 @@ include "' . $dir . '/lib/' . $capTableName . '.php";
 ' . $outEditFieldsTxt . '
 	$' . $table . 'Update->updateDB();
 }
-include "../tmpl/header.php";
+include "' . $dir . '/tmpl/header.php";
 
 
 $' . $table . ' = new ' . $capTableName . '();
@@ -243,7 +243,7 @@ include "' . $dir . '/lib/' . $capTableName . '.php";
     
     exit();
 }
-include "../tmpl/header.php";
+include "' . $dir . '/tmpl/header.php";
 ?>
 ';
 
