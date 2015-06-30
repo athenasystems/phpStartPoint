@@ -1,10 +1,9 @@
 #!/bin/bash
-
 # Prepares your system to run phpStartPoint
 clear
 if [ "$(id -u)" != "0" ]; then
-	echo "This script must be run as root if you want to"
-	echo "install Perl Modules or set up the Apache Web Server"
+	echo "This script must be run as root if you want toinstall the "
+	echo "required Perl Modules or set up the Apache Web Server"
 	echo "OK to continue Y/n"
 	read -s -n 1 ans
 	if [ "$ans" = "" ]; then
@@ -52,112 +51,25 @@ if [[ $platform == 'suse' ]]; then
 	fi				    
 fi
 
-
 if [[ $platform == 'debian' ]]; then
 
-	if which php < /dev/null > /dev/null 2>&1  ; then
-		echo "PHP is installed"
-	else
-		echo $spacer
-		echo "PHP does not appear to be installed"	
-		echo $installPromt	
-		read -s -n 1 ans
-		if [ "$ans" = "" ]; then 
-			ans=y
-		fi 	
-	    if [ "$ans" = "y" ]; then 
-				    
-			if [ "$(id -u)" != "0" ]; then
-			   echo "This script must be run as root" 1>&2
-			   exit 1
-			fi
-			apt-get -y install php5
-		else
-		echo "Ok ... skipping"
+	echo $spacer
+	echo "Install any missing LAMP software?"
+	echo $installPromt	
+	read -s -n 1 ans
+	if [ "$ans" = "" ]; then 
+		ans=y
+	fi 	
+    if [ "$ans" = "y" ]; then 
+			    
+		if [ "$(id -u)" != "0" ]; then
+		   echo "This script must be run as root" 1>&2
+		   exit 1
 		fi
-	fi
-	
-	
-	if which mysqld < /dev/null > /dev/null 2>&1  ; then
-		echo "MySQL server is installed"
+		apt-get -y install apache2 php5 mysql-server php5-mysqlnd libapache2-mod-php5 libdbi-perl libterm-readkey-perl
 	else
-		echo $spacer
-		echo "MySQL server does not appear to be installed"
-		echo $installPromt
-		read -s -n 1 ans
-		if [ "$ans" = "" ]; then 
-			ans=y
-		fi 	
-	
-	    if [ "$ans" = "y" ]; then 
-				    
-			if [ "$(id -u)" != "0" ]; then
-			   echo "This script must be run as root" 1>&2
-			   exit 1
-			fi
-			apt-get -y install mysql-server php5-mysqlnd
-		else
-		echo "Ok ... skipping"
-		fi
-	fi
-	
-	
-
-	if [ -f /usr/sbin/apache2 ]
-	then echo "Apache2 is installed"
-	else
-		echo $spacer
-		echo "Apache2 does not appear to be installed"
-		echo $installPromt
-		read -s -n 1 ans
-		if [ "$ans" = "" ]; then 
-			ans=y
-		fi 	
-	
-	    if [ "$ans" = "y" ]; then 
-				    
-			if [ "$(id -u)" != "0" ]; then
-			   echo "This script must be run as root" 1>&2
-			   exit 1
-			fi
-			apt-get -y install apache2 libapache2-mod-php5
-		else
-		echo "Ok ... skipping"
-		fi
-	fi
-
-	req1=''
-	req2=''
-
-	if perl -e 'use DBI;' < /dev/null > /dev/null 2>&1  ; then
-		echo Perl DBI module installed
-	else
-		req1=libdbi-perl	 
-	fi
-	
-	if perl -e 'use Term::ReadKey;' < /dev/null > /dev/null 2>&1  ; then
-		echo Perl Term::ReadKey module installed
-	else
-		req2=libterm-readkey-perl
-	fi
-	
-	if [[ $req1 != '' ]] || [[ $req2 != ''  ]] ; then
-		echo $spacer
-		echo Dang! ... need some perl modules installed i.e. $req1 $req2
-		echo Shall I install them now? Y/n
-		read -s -n 1 ans
-		if [ "$ans" = "" ]; then 
-			ans=y
-		fi 
-		if [ "$ans" = "y" ]; then
-		    
-			if [ "$(id -u)" != "0" ]; then
-			   echo "This script must be run as root" 1>&2
-			   exit 1
-			fi
-			apt-get -y install $req1 $req2
-		fi 
-	fi
+	echo "Ok ... skipping"
+	fi	
 fi
 
 if [[ $platform == 'redhat' ]]; then
