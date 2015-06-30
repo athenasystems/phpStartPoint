@@ -33,7 +33,6 @@ echo "Checking your OS and environment"
 echo OS is $platform based
 
 if [[ $platform == 'suse' ]]; then
-
 	echo $spacer
 	echo "Install any missing stuff? Y/n:"	
 	read -s -n 1 ans
@@ -52,15 +51,14 @@ if [[ $platform == 'suse' ]]; then
 fi
 
 if [[ $platform == 'debian' ]]; then
-
 	echo $spacer
 	echo "Install any missing LAMP software?"
 	echo $installPromt	
 	read -s -n 1 ans
-	if [ "$ans" = "" ]; then 
+	if [ "$ans" = "" ]; then
 		ans=y
-	fi 	
-    if [ "$ans" = "y" ]; then 
+	fi
+    if [ "$ans" = "y" ]; then
 			    
 		if [ "$(id -u)" != "0" ]; then
 		   echo "This script must be run as root" 1>&2
@@ -69,12 +67,10 @@ if [[ $platform == 'debian' ]]; then
 		apt-get -y install apache2 php5 mysql-server php5-mysqlnd libapache2-mod-php5 libdbi-perl libterm-readkey-perl
 	else
 	echo "Ok ... skipping"
-	fi	
+	fi
 fi
 
 if [[ $platform == 'redhat' ]]; then
-
-
 	echo $spacer
 	echo "Install any missing stuff? Y/n:"	
 	read -s -n 1 ans
@@ -87,7 +83,7 @@ if [[ $platform == 'redhat' ]]; then
 		   exit 1
 		fi
 		
-		yum install httpd perl-DBI perl-TermReadKey perl-DBD-mysql mariadb-server php php-mysql
+		yum install httpd mariadb-server php php-mysql perl-DBI perl-TermReadKey perl-DBD-mysql
 		service httpd start
 		systemctl start mariadb
 		systemctl enable mariadb
