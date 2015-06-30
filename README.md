@@ -11,12 +11,12 @@ phpStartPoint is a tool to help programmers start to develop PHP code for a data
 
 It also optionally sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine, or a server. I even threw in a sample database to serve as an example for the curious.
 
-It aim is to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. 
+It aim is to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. It also aims to not tie the developers hands in any way, and encourages understanding the lowest level of code. Some frameworks promise to allow you to do code without knowing the code, which arguably disempowers new coders.
 
 # Building Classes
 This script will examine a MySQL database, and create object oriented PHP classes and PHP code for the web pages. It will create as many classes as there are tables, and create web pages to add a new item, update a row, or delete a row from the database.
 
-# Bind Parameters
+# Binding Parameters to SQL statements
 The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and creates a php function that will automatically work out the bind_params format to pass to the function. This means you get nice clean functions, and it simplifies the coding later on.
 
 # It's Vanilla Flavoured
@@ -35,5 +35,3 @@ It is unlikely all the php code that is produced will be needed, but the idea is
 
 # Just running the phpStartPoint script
 You can just run the **phpStartPoint.pl** script in this package. You will need Perl, with the perl DBI, and Term::ReadKey modules i.e. perl-DBI perl-Term-ReadKey on debian based OS, or perl-DBI perl-TermReadKey on a RedHat based distro.
-
-

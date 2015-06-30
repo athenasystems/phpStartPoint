@@ -459,8 +459,7 @@ close(FH);
 
 $navHTML =~ s/ \| $//s;
 
-$navHTML = <<EOF;
-$navHTML
+$navHTML .= <<EOF;
 </ul></div>
 </div></nav>
 EOF
@@ -956,7 +955,7 @@ class DB
 				dbuser=adbusername
 				host=localhost
              */
-            $config = parse_ini_file('/etc/athenace/athena.conf');
+            $config = parse_ini_file('ATHENADIR/etc/db.conf');
             $this->user = $config['dbuser'];
             $this->password = $config['dbpw'];
             $this->database = $config['db'];
@@ -1169,7 +1168,7 @@ class DB
 
 ^;
 
-	$dbclassFile =~ s/THISDIR/$dir/s;
+	$dbclassFile =~ s/ATHENADIR/$dir/s;
 
 	open( FH, ">$dir/lib/DB.php" );
 	print FH $dbclassFile;
