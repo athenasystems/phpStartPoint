@@ -72,7 +72,7 @@ fi
 
 if [[ $platform == 'redhat' ]]; then
 	echo $spacer
-	echo "Install any missing stuff? Y/n:"	
+	echo "Install any missing LAMP software? Y/n:"	
 	read -s -n 1 ans
 	if [ "$ans" = "" ]; then 
 		ans=y
