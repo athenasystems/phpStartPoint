@@ -685,11 +685,11 @@ sub doPermissions {
 
 	system("chown -R $user:$user $dir");
 
-	if ( $platform =~ /^(fedora|redhat)$/ ) {
+	if ( $platform =~ /^(fedora|redhat|centos)$/ ) {
 		my $parentDir = $dir;
 		$parentDir =~ s/\/phpstartpoint//;
 		print "Doing SE permissions on $parentDir\n";
-		system("semanage fcontext -a -t public_content_rw_t \"$parentDir(/.*)?\" > /dev/null 2>&1");
+		system("semanage fcontext -a -t httpd_sys_content_t \"$parentDir(/.*)?\" > /dev/null 2>&1");
 		system("restorecon -R -v $parentDir/ > /dev/null 2>&1");
 	}
 
@@ -1358,6 +1358,9 @@ sub getPlatform() {
 	}
 	if ( $q =~ /Red Hat/s ) {
 		return 'redhat';
+	}
+	if ( $q =~ /centos/s ) {
+		return 'centos';
 	}
 	return 'unknown';
 }

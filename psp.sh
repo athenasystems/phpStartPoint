@@ -86,10 +86,8 @@ if [[ $platform == 'redhat' ]]; then
 		yum install httpd mariadb-server php php-mysql perl-DBI perl-TermReadKey perl-DBD-mysql
 		service httpd start
 		systemctl start mariadb
-		systemctl enable mariadb
-		
+		systemctl enable mariadb		
 		chkconfig httpd on
-		chkconfig mysqld on
 		service httpd restart
 	fi
 fi
