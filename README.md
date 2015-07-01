@@ -9,9 +9,10 @@ And makes all the web pages (in /www)
 # phpStartPoint
 phpStartPoint is a tool to help programmers start to develop PHP code for a database driven web application. The idea is that you build a database, and then you run this script which will produce PHP Class code, and php web pages that can be used to control the data in the database. What gets output is a starting point, and not all of the code will be useful or probably needed. 
 
-The psp.sh script also optionally sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine, or a server. There is a sample database to serve as an example for the curious.
-
 It aim is to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. It also aims to not tie the developers hands in any way, and encourages understanding the lowest level of code. Some frameworks promise to allow you to do code without knowing the code, which arguably disempowers new coders.
+
+# psp.sh Set Up Script
+The psp.sh script also optionally sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine, or a server. There is a sample database to serve as an example for the curious.
 
 # Usage
 To simply run phpStartPoint on your database run  
