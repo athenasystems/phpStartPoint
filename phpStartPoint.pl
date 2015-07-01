@@ -11,8 +11,9 @@ my $domain = '';
 use DBI;
 use Term::ReadKey;
 
-my $dir      = $ENV{"HOME"};
-my $user     = ( defined( $ENV{"SUDO_USER"} ) ) ? $ENV{"SUDO_USER"} : $ENV{"USER"};
+my $dir = $ENV{"HOME"};
+if ( $dir eq '/root' ) { $dir = '/srv/www' }
+my $user = ( defined( $ENV{"SUDO_USER"} ) ) ? $ENV{"SUDO_USER"} : $ENV{"USER"};
 my $platform = &getPlatform();
 
 system("clear");
@@ -546,17 +547,12 @@ sub makeDirectory {
 
 	# Get folder
 	print "Where shall I put the 'phpstartpoint' folder for the php files?\n";
-	print "Default is " . $ENV{'HOME'} . " meaning the files will live in " . $ENV{'HOME'} . "/phpstartpoint\n($dir): ";
+	print "Default is $dir meaning the files will live in $dir/phpstartpoint\n($dir): ";
 	ReadMode 1;
 	$dir = <STDIN>;
 	chomp $dir;
+	$dir .= '/phpstartpoint';
 
-	if ( ( !defined($dir) ) || ( $dir eq '' ) ) {
-		$dir = $ENV{'HOME'} . '/phpstartpoint';
-	}
-	else {
-		$dir .= '/phpstartpoint';
-	}
 	print "Installing to ... $dir\n";
 	if ( -e $dir ) {
 		print "Warning: Everything in the existing $dir folder will be toast OK?\n(Y/n): ";
