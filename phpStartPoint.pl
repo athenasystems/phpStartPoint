@@ -482,6 +482,7 @@ if ( ( $runType eq 'example' ) || ( $runType eq 'www' ) ) {
 
 exit;
 
+
 sub getRunType() {
 	print "
 Type a number 1, 2 or 3   
