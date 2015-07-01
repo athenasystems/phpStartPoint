@@ -18,32 +18,10 @@ my $platform = &getPlatform();
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
 print "$spacer\n\nRunning ... phpStartPoint\n\n$spacer";
+my $runType = 1;
 
-sub getRunType() {
-	print "
-Type a number:-  
-1. To run phpStartPoint on your database run  
-2. To setup an Apache Virtual Host for the files created run  
-3. To setup an Apache Virtual Host for the files created, and import the example database run
+&getRunType();
 
-$spacer
-";
-	my $ans = <STDIN>;
-	chomp $ans;
-	my $runType = 1;
-	if    ( $ans eq 1 ) { $runType = ''; }
-	elsif ( $ans eq 2 ) { $runType = 'www'; }
-	elsif ( $ans eq 3 ) { $runType = 'example'; }
-	else {
-		print "Couldn't understand which option that was .. exiting";
-		exit;
-	}
-	my $userLevel = $>;
-	if ( ($userLevel) && ( $runType =~ /(example|www)/ ) ) {
-		print "\nGotta be root to run that option!\n\nTry sudo ./phpStartPoint.pl\n\n";
-		exit;
-	}
-}
 &makeDirectory();
 
 &doDatabase();
@@ -502,6 +480,32 @@ if ( ( $runType eq 'example' ) || ( $runType eq 'www' ) ) {
 }
 
 exit;
+
+sub getRunType() {
+	print "
+Type a number:-  
+1. To run phpStartPoint on your database run  
+2. To setup an Apache Virtual Host for the files created run  
+3. To setup an Apache Virtual Host for the files created, and import the example database run
+
+$spacer
+";
+	my $ans = <STDIN>;
+	chomp $ans;
+
+	if    ( $ans eq 1 ) { $runType = ''; }
+	elsif ( $ans eq 2 ) { $runType = 'www'; }
+	elsif ( $ans eq 3 ) { $runType = 'example'; }
+	else {
+		print "Couldn't understand which option that was .. exiting";
+		exit;
+	}
+	my $userLevel = $>;
+	if ( ($userLevel) && ( $runType =~ /(example|www)/ ) ) {
+		print "\nGotta be root to run that option!\n\nTry sudo ./phpStartPoint.pl\n\n";
+		exit;
+	}
+}
 
 sub outputCredFile {
 
