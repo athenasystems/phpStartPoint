@@ -20,7 +20,7 @@ my $spacer = '------------------------------------------------------------------
 print "$spacer\nRunning ... phpStartPoint\n$spacer";
 my $runType = 'none';
 
-while ( ( $runType ne 'normal' ) || ( $runType ne 'www' ) || ( $runType ne 'example' ) ) {
+while ( $runType !~ /(normal|www|example)/ ) {
 	&getRunType();
 }
 
