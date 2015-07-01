@@ -64,7 +64,7 @@ my $htmlIndex     = '';
 my $outFormatsTxt = '';
 my $navHTML       = '';
 
-print "\n$spacer\nRunning phpStartPoint on the $db database...\n$spacer\n";
+print "\n$spacer\nRunning phpStartPoint on the $db database...\n";
 
 ## SQL query to get Table names from DB
 my $sqltext = "show tables";
@@ -460,7 +460,7 @@ blah blah blah ... <br><br><br>
 tl:dr use it if helps :) </div>
 EOF
 
-print "$spacer\nCreating the Index web page in $dir/www/index.php\n";
+print "Creating the Index web page in $dir/www/index.php\n";
 open( FH, ">$dir/www/index.php" );
 print FH '<?php include "../tmpl/header.php"; ?>' . $htmlIndex . '<?php include "../tmpl/footer.php";?>';
 close(FH);
