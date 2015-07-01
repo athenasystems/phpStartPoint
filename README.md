@@ -17,7 +17,7 @@ It aim is to take the work out of setting up a web app system on a LAMP server, 
 To simply run phpStartPoint on your database run  
 `perl ./phpStartPoint.pl`
 
-To run phpStartPoint and setup an Apache Virtual Host for the files created run  
+To run phpStartPoint on your database and setup an Apache Virtual Host for the files created run  
 `perl ./phpStartPoint.pl www`
 
 To run phpStartPoint and setup an Apache Virtual Host for the files created, and import the example database run  
