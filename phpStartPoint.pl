@@ -17,7 +17,7 @@ my $platform = &getPlatform();
 
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
-print "$spacer\n\nRunning ... phpStartPoint\n\n$spacer";
+print "$spacer\nRunning ... phpStartPoint\n$spacer";
 my $runType = 0;
 
 while ( ( $runType != 1 ) || ( $runType != 2 ) || ( $runType != 3 ) ) {
@@ -485,9 +485,12 @@ exit;
 sub getRunType() {
 	print "
 Type a number 1, 2 or 3   
-1. To run phpStartPoint on your database run  
-2. To setup an Apache Virtual Host for the files created run  
-3. To setup an Apache Virtual Host for the files created, and import the example database run
+
+1. To run phpStartPoint on your database  
+
+2. To run phpStartPoint on your database and setup an Apache Virtual Host for the files created  
+
+3. To run phpStartPoint on your database, setup an Apache Virtual Host for the files created and import the example database
 
 $spacer
 ";
