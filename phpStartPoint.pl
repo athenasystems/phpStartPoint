@@ -18,11 +18,12 @@ my $platform = &getPlatform();
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
 print "$spacer\nRunning ... phpStartPoint\n$spacer";
-my $runType = 0;
+my $runType = 'none';
 
-while ( ( $runType != 1 ) || ( $runType != 2 ) || ( $runType != 3 ) ) {
+while ( ( $runType ne 'normal' ) || ( $runType ne 'www' ) || ( $runType ne 'example' ) ) {
 	&getRunType();
 }
+
 &makeDirectory();
 
 &doDatabase();
@@ -497,7 +498,7 @@ $spacer
 	my $ans = <STDIN>;
 	chomp $ans;
 
-	if    ( $ans eq 1 ) { $runType = ''; }
+	if    ( $ans eq 1 ) { $runType = 'normal'; }
 	elsif ( $ans eq 2 ) { $runType = 'www'; }
 	elsif ( $ans eq 3 ) { $runType = 'example'; }
 	else                { print "Not a valid answer\n\n"; }
