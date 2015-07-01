@@ -312,7 +312,7 @@ if (! empty($res)) {
 	}
 ';
 	my $htmlH1  = '<h1>' . $capTableName . '</h1>';
-	my $htmlAdd = '<div><a href="add.php">Add an Item</a></div><br>';
+	my $htmlAdd = '<div><a href="add.php">Add an Item to the ' . $capTableName . ' table</a></div><br>';
 
 	print "creating web pages ";
 
