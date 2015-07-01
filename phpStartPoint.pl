@@ -905,7 +905,7 @@ sub makeApacheConf() {
 </VirtualHost>
 ";
 
-	print "\n\nMaking the Apache Virtual Host conf file\n\n";
+	print "Making the Apache Virtual Host conf file\n";
 
 	if ( -e "/etc/apache2/sites-available" ) {
 		open( FH, ">/etc/apache2/sites-available/$domain.conf" );
@@ -938,7 +938,7 @@ sub makeApacheConf() {
 		system("service httpd restart");
 	}
 
-	print "\n\nAdding '127.0.0.1  $domain' to the /etc/hosts file\n\n";
+	print "Adding '127.0.0.1  $domain' to the /etc/hosts file\n";
 
 	my $hosttext = '';
 	open( FHH, "</etc/hosts" );
