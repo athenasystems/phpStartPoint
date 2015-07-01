@@ -932,7 +932,7 @@ sub makeApacheConf() {
 	if ( $platform eq 'suse' ) {
 		system("rcapache2 restart");
 	}
-	if ( $platform =~ /^(debain|ubuntu|mint)$/ ) {
+	if ( $platform =~ /^(debian|ubuntu|mint)$/ ) {
 		system("service apache2 restart");
 	}
 	if ( $platform =~ /^(fedora|redhat)$/ ) {
