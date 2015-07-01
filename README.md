@@ -14,13 +14,13 @@ The psp.sh script also optionally sets up Apache2, MySQL, and php5, and adds the
 It aim is to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. It also aims to not tie the developers hands in any way, and encourages understanding the lowest level of code. Some frameworks promise to allow you to do code without knowing the code, which arguably disempowers new coders.
 
 # Usage
-To simply run phpStartPoint on your database run
+To simply run phpStartPoint on your database run  
 `perl ./phpStartPoint.pl`
 
-To run phpStartPoint and setup an Apache Virtual Host for the files created run
+To run phpStartPoint and setup an Apache Virtual Host for the files created run  
 `perl ./phpStartPoint.pl www`
 
-To run phpStartPoint and setup an Apache Virtual Host for the files created, and import the example database run
+To run phpStartPoint and setup an Apache Virtual Host for the files created, and import the example database run  
 `perl ./phpStartPoint.pl example`
 
 
