@@ -482,7 +482,6 @@ if ( ( $runType eq 'example' ) || ( $runType eq 'www' ) ) {
 
 exit;
 
-
 sub getRunType() {
 	print "
 Type a number 1, 2 or 3   
@@ -491,7 +490,7 @@ Type a number 1, 2 or 3
 
 2. To run phpStartPoint on your database and setup an Apache Virtual Host for the files created  
 
-3. To run phpStartPoint on your database, setup an Apache Virtual Host for the files created and import the example database
+3. To run phpStartPoint on the example database, setup an Apache Virtual Host for the files created
 
 $spacer
 ";
@@ -501,10 +500,7 @@ $spacer
 	if    ( $ans eq 1 ) { $runType = ''; }
 	elsif ( $ans eq 2 ) { $runType = 'www'; }
 	elsif ( $ans eq 3 ) { $runType = 'example'; }
-	else {
-		print "Type a number 1, 2 or 3\n";
-		
-	}
+	else                { print "Not a valid answer\n\n"; }
 	my $userLevel = $>;
 	if ( ($userLevel) && ( $runType =~ /(example|www)/ ) ) {
 		print "\nGotta be root to run that option!\n\nTry sudo ./phpStartPoint.pl\n\n";
