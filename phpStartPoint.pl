@@ -11,9 +11,9 @@ my $domain = '';
 use DBI;
 use Term::ReadKey;
 
-my $dir      = $ENV{"HOME"};
-if($dir eq '/root'){$dir = '/srv/www'}
-my $user     = ( defined( $ENV{"SUDO_USER"} ) ) ? $ENV{"SUDO_USER"} : $ENV{"USER"};
+my $dir = $ENV{"HOME"};
+if ( $dir eq '/root' ) { $dir = '/srv/www' }
+my $user = ( defined( $ENV{"SUDO_USER"} ) ) ? $ENV{"SUDO_USER"} : $ENV{"USER"};
 my $platform = &getPlatform();
 
 system("clear");
@@ -311,13 +311,13 @@ if (! empty($res)) {
 		return $ret;
 	}
 ';
-
+	my $htmlH1  = '<h1>' . $capTableName . '</h1>';
 	my $htmlAdd = '<div><a href="add.php">Add an Item</a></div><br>';
 
 	print "creating web pages ";
 
 	open( FH, ">$dir/www/$table/index.php" );
-	print FH $htmlHead . $htmlAdd . $htmlListBody . $htmlFoot;
+	print FH $htmlHead . $htmlH1 . $htmlAdd . $htmlListBody . $htmlFoot;
 	close(FH);
 
 	open( FH, ">$dir/www/$table/view.php" );
@@ -483,7 +483,6 @@ if ( ( $runType eq 'example' ) || ( $runType eq 'www' ) ) {
 exit;
 
 ###############################################################################
-
 
 sub getRunType() {
 	print "
