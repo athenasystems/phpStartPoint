@@ -488,9 +488,9 @@ Type a number 1, 2 or 3
 
 1. To run phpStartPoint on your database  
 
-2. To run phpStartPoint on your database and setup an Apache Virtual Host for the files created  
+2. To run phpStartPoint on your database and setup an Apache Virtual Host
 
-3. To run phpStartPoint on the example database, setup an Apache Virtual Host for the files created
+3. To run phpStartPoint on the example database, setup an Apache Virtual Host
 
 $spacer
 ";
