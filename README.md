@@ -16,16 +16,6 @@ It aim is to take the work out of setting up a web app system on a LAMP server, 
 # psp.sh Set Up Script
 The psp.sh script also optionally sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine, or a server. There is a sample database to serve as an example for the curious.
 
-# Usage
-To simply run phpStartPoint on your database run  
-`perl ./phpStartPoint.pl`
-
-To run phpStartPoint on your database and setup an Apache Virtual Host for the files created run  
-`perl ./phpStartPoint.pl www`
-
-To run phpStartPoint and setup an Apache Virtual Host for the files created, and import the example database run  
-`perl ./phpStartPoint.pl example`
-
 # Building Classes
 This script will examine a MySQL database, and create object oriented PHP classes and PHP code for the web pages. It will create as many classes as there are tables, and create web pages to add a new item, update a row, or delete a row from the database.
 

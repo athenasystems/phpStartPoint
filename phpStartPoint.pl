@@ -11,35 +11,39 @@ my $domain = '';
 use DBI;
 use Term::ReadKey;
 
-my $runType = $ARGV[0];
-
-my $userLevel = $>;
-if ( ($userLevel) && ( $runType =~ /(example|www)/ ) ) {
-	print "\nGotta be root to run that option!\n\nTry sudo ./phpStartPoint.pl\n\n";
-	exit;
-}
-
 my $dir      = $ENV{"HOME"};
 my $user     = ( defined( $ENV{"SUDO_USER"} ) ) ? $ENV{"SUDO_USER"} : $ENV{"USER"};
 my $platform = &getPlatform();
 
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
-print "$spacer\n\nRunning ... phpStartPoint\n\n$spacer
-Usage:
-To run phpStartPoint on your database run
-perl ./phpStartPoint.pl
+print "$spacer\n\nRunning ... phpStartPoint\n\n$spacer";
 
-To setup an Apache Virtual Host for the files created run
-perl ./phpStartPoint.pl www
+sub getRunType() {
+	print "
+Type a number:-  
+1. To run phpStartPoint on your database run  
+2. To setup an Apache Virtual Host for the files created run  
+3. To setup an Apache Virtual Host for the files created, and import the example database run
 
-To setup an Apache Virtual Host for the files created, and import the example database run
-perl ./phpStartPoint.pl example
 $spacer
-
 ";
-my $ans = '';
-
+	my $ans = <STDIN>;
+	chomp $ans;
+	my $runType = 1;
+	if    ( $ans eq 1 ) { $runType = ''; }
+	elsif ( $ans eq 2 ) { $runType = 'www'; }
+	elsif ( $ans eq 3 ) { $runType = 'example'; }
+	else {
+		print "Couldn't understand which option that was .. exiting";
+		exit;
+	}
+	my $userLevel = $>;
+	if ( ($userLevel) && ( $runType =~ /(example|www)/ ) ) {
+		print "\nGotta be root to run that option!\n\nTry sudo ./phpStartPoint.pl\n\n";
+		exit;
+	}
+}
 &makeDirectory();
 
 &doDatabase();
