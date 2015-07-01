@@ -935,7 +935,7 @@ sub makeApacheConf() {
 	if ( $platform =~ /^(debian|ubuntu|mint)$/ ) {
 		system("service apache2 restart");
 	}
-	if ( $platform =~ /^(fedora|redhat)$/ ) {
+	if ( $platform =~ /^(fedora|redhat|centos)$/ ) {
 		system("service httpd restart");
 	}
 
