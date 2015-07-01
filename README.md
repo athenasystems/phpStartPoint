@@ -1,5 +1,5 @@
 # tl;dr version
-Have Linux. In a terminal as root do ... 
+Have Linux. In a terminal, as root, do ... 
 
 `wget -N https://raw.githubusercontent.com/athenasystems/phpstartpoint/master/psp.sh && bash psp.sh`
 
@@ -26,7 +26,6 @@ To run phpStartPoint on your database and setup an Apache Virtual Host for the f
 To run phpStartPoint and setup an Apache Virtual Host for the files created, and import the example database run  
 `perl ./phpStartPoint.pl example`
 
-
 # Building Classes
 This script will examine a MySQL database, and create object oriented PHP classes and PHP code for the web pages. It will create as many classes as there are tables, and create web pages to add a new item, update a row, or delete a row from the database.
 
@@ -43,7 +42,6 @@ The script creates a series of php pages intended to be the basis for a web site
 	2. A page to add a row
 	3. A page to edit an existing row
 	4. A page to delete a row
-
 
 # Just running the phpStartPoint script
 You can just run the **phpStartPoint.pl** script in this package. You will need Perl, with the perl DBI, and Term::ReadKey modules i.e. perl-DBI perl-Term-ReadKey on debian based OS, or perl-DBI perl-TermReadKey on a RedHat based distro.
