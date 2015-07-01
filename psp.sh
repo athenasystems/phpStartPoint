@@ -44,7 +44,7 @@ if [[ $platform == 'suse' ]]; then
 		zypper install mariadb
 		systemctl start mariadb
 		systemctl enable mariadb
-		aptitude -y install php5 php5-mysql apache2 apache2-mod_php5 perl-DBI perl-Term-ReadKey perl-DBD-mysql
+		aptitude -y install php5 php5-mysqlnd apache2 apache2-mod_php5 perl-DBI perl-Term-ReadKey perl-DBD-mysql
 		rcmysql start
 		rcapache2 start
 	fi				    
