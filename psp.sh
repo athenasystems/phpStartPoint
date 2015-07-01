@@ -83,7 +83,7 @@ if [[ $platform == 'redhat' ]]; then
 		   exit 1
 		fi
 		
-		yum install httpd mariadb-server php php-mysql perl-DBI perl-TermReadKey perl-DBD-mysql
+		yum install httpd mariadb-server php php-mysqlnd perl-DBI perl-TermReadKey perl-DBD-mysql
 		service httpd start
 		systemctl start mariadb
 		systemctl enable mariadb		
