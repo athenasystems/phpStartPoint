@@ -18,10 +18,11 @@ my $platform = &getPlatform();
 system("clear");
 my $spacer = '------------------------------------------------------------------------------';
 print "$spacer\n\nRunning ... phpStartPoint\n\n$spacer";
-my $runType = 1;
+my $runType = 0;
 
-&getRunType();
-
+while ( ( $runType != 1 ) || ( $runType != 2 ) || ( $runType != 3 ) ) {
+	&getRunType();
+}
 &makeDirectory();
 
 &doDatabase();
@@ -483,7 +484,7 @@ exit;
 
 sub getRunType() {
 	print "
-Type a number:-  
+Type a number 1, 2 or 3   
 1. To run phpStartPoint on your database run  
 2. To setup an Apache Virtual Host for the files created run  
 3. To setup an Apache Virtual Host for the files created, and import the example database run
@@ -497,8 +498,8 @@ $spacer
 	elsif ( $ans eq 2 ) { $runType = 'www'; }
 	elsif ( $ans eq 3 ) { $runType = 'example'; }
 	else {
-		print "Couldn't understand which option that was .. exiting";
-		exit;
+		print "Type a number 1, 2 or 3\n";
+		
 	}
 	my $userLevel = $>;
 	if ( ($userLevel) && ( $runType =~ /(example|www)/ ) ) {
