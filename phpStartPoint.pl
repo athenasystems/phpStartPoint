@@ -31,8 +31,6 @@ while ( $runType !~ /(normal|www|example)/ ) {
 
 &outputCredFile();
 
-print "$spacer\n\n";
-
 my $doApace = '';
 if ( ( $runType eq 'example' ) || ( $runType eq 'www' ) ) {
 	&setupApache;
@@ -474,15 +472,18 @@ $sth->finish;
 
 &doPermissions();
 
-print "Credentials file is stored at $dir/etc/db.conf\n\n";
-print "PHP Classes files are stored at $dir/lib\n\n";
-print "Web pages are stored at $dir/www\n\n";
+print "Credentials file is stored at $dir/etc/db.conf\n";
+print "PHP Classes files are stored at $dir/lib\n";
+print "Web pages are stored at $dir/www\n";
 if ( ( $runType eq 'example' ) || ( $runType eq 'www' ) ) {
-	print "The Apache web root is $dir/www\n\n";
-	print "Go to http://$domain in a brower\n\n";
+	print "The Apache web root is $dir/www\n";
+	print "Go to http://$domain in a brower\n";
 }
 
 exit;
+
+###############################################################################
+
 
 sub getRunType() {
 	print "
@@ -911,7 +912,7 @@ sub makeApacheConf() {
 		open( FH, ">/etc/apache2/sites-available/$domain.conf" );
 		print FH $apache2Conf;
 		close(FH);
-		print "\n\nApache2 Conf file written to /etc/apache2/sites-available/$domain.conf\n\n";
+		print "Apache2 Conf file written to /etc/apache2/sites-available/$domain.conf\n";
 		chdir('/etc/apache2/sites-available');
 		system("a2ensite $domain.conf");
 	}
@@ -919,13 +920,13 @@ sub makeApacheConf() {
 		open( FH, ">/etc/apache2/vhosts.d/$domain.conf" );
 		print FH $apache2Conf;
 		close(FH);
-		print "\n\nApache2 Conf file written to /etc/apache2/vhosts.d/$domain.conf\n\n";
+		print "Apache2 Conf file written to /etc/apache2/vhosts.d/$domain.conf\n";
 	}
 	elsif ( -e "/etc/httpd/conf.d/" ) {
 		open( FH, ">/etc/httpd/conf.d/$domain.conf" );
 		print FH $apache2Conf;
 		close(FH);
-		print "\n\nApache2 Conf file written to /etc/httpd/conf.d/$domain.conf\n\n";
+		print "Apache2 Conf file written to /etc/httpd/conf.d/$domain.conf\n";
 	}
 
 	if ( $platform eq 'suse' ) {
