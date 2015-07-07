@@ -1,13 +1,14 @@
 #!/usr/bin/perl
 use strict;
+
 ###########################################################
-# Edit this section to reflect your MySQL database details
+
 my $db     = '';
 my $dbpw   = '';
 my $dbuser = '';
 my $dbhost = 'localhost';
 my $domain = '';
-###########################################################
+
 use DBI;
 use Term::ReadKey;
 
