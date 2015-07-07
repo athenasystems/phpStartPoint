@@ -86,12 +86,6 @@ while ( my @row_array = $sth->fetchrow_array ) {
 <li><a href="/$table">$capTableName</a></li> 
 EOF
 
-	my $classHeader = "
-	
-class $capTableName
-{
-";
-
 	print "Processing the $table table ... ";
 
 	# Make the folder for the PHP pages for this Table
@@ -173,6 +167,7 @@ class $capTableName
 include "' . $dir . '/lib/DB.php";
 $db = new DB();
 include "' . $dir . '/lib/' . $capTableName . '.php";
+$pageTitle = "' . $capTableName . ' Page";
 include "' . $dir . '/tmpl/header.php"; 
  
 
@@ -194,6 +189,7 @@ include "' . $dir . '/lib/' . $capTableName . '.php";
 	header("Location: /' . $table . '/?ItemAdded=y");
 
 }
+$pageTitle = "' . $capTableName . ' Page";
 include "' . $dir . '/tmpl/header.php";
 ?>
 ';
@@ -209,6 +205,7 @@ include "' . $dir . '/lib/' . $capTableName . '.php";
 ' . $outEditFieldsTxt . '
 	$' . $table . 'Update->updateDB();
 }
+$pageTitle = "' . $capTableName . ' Page";
 include "' . $dir . '/tmpl/header.php";
 
 
@@ -235,6 +232,7 @@ include "' . $dir . '/lib/' . $capTableName . '.php";
     
     exit();
 }
+$pageTitle = "' . $capTableName . ' Page";
 include "' . $dir . '/tmpl/header.php";
 ?>
 ';
@@ -410,6 +408,11 @@ if (! empty($res)) {
 	$bindValues =~ s/,\n$//s;
 	$bindValues .= ');' . "\n\n";
 
+	my $classHeader = "
+class $capTableName
+{
+";
+
 	my $phpClass =
 	    $classHeader
 	  . $privateVariables
@@ -418,8 +421,7 @@ if (! empty($res)) {
 	  . $loadFunction
 	  . $saveToDBFunction
 	  . $insertToDBFunction
-	  . $deleteFromDBFunction . '}'
-	  . $bindValues;
+	  . $deleteFromDBFunction . '}';
 
 	$allPHPClasses .=
 	    $classHeader
@@ -433,7 +435,7 @@ if (! empty($res)) {
 
 	print "& PHP $capTableName Class\n";
 	open( FH, ">$dir/lib/$capTableName.php" );
-	print FH '<?php' . $phpClass . "
+	print FH '<?php' . "\n" . $bindValues . $phpClass . "
 ?>";
 	close(FH);
 
@@ -462,7 +464,9 @@ EOF
 
 print "Creating the Index web page in $dir/www/index.php\n";
 open( FH, ">$dir/www/index.php" );
-print FH '<?php include "../tmpl/header.php"; ?>' . $htmlIndex . '<?php include "../tmpl/footer.php";?>';
+print FH '<?php 
+$pageTitle = "Home Page";
+include "../tmpl/header.php"; ?>' . $htmlIndex . '<?php include "../tmpl/footer.php";?>';
 close(FH);
 
 $sth->finish;
@@ -609,7 +613,7 @@ sub makeNav() {
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">phpStartPoint</a>
+			<a class="navbar-brand" href="/">phpStartPoint</a>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">';
@@ -669,7 +673,7 @@ sub makeTemplate {
 	print "$spacer\nCreating headers and footers for the web pages $dir/inc\n";
 	open( FH, ">$dir/tmpl/header.php" );
 	print FH '<!DOCTYPE html><html><head><meta charset="UTF-8">
-<title></title>
+<title><?php echo $pageTitle; ?></title>
 ' . $bootstrap . '
 </head><body>' . $navHTML;
 	close(FH);
