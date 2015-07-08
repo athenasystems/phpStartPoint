@@ -943,6 +943,14 @@ sub makeApacheConf() {
 		system("service httpd restart");
 	}
 
+	&doHostsFile($domain);
+
+	chdir($dir);
+
+}
+
+sub doHostsFile(){
+	my $domain = shift;
 	print "Adding '127.0.0.1  $domain' to the /etc/hosts file\n";
 
 	my $hosttext = '';
@@ -953,6 +961,8 @@ sub makeApacheConf() {
 		}
 	}
 	close(FHH);
+	
+	$hosttext =~s/\n$//s;
 
 	$hosttext .= "
 127.0.0.1       $domain
@@ -961,9 +971,7 @@ sub makeApacheConf() {
 	open( FHOUT, ">/etc/hosts" );
 	print FHOUT $hosttext;
 	close(FHOUT);
-
-	chdir($dir);
-
+	
 }
 
 sub makeDBClass() {
