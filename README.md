@@ -11,10 +11,10 @@ phpStartPoint is a tool to help programmers start to develop PHP code for a data
 
 It aim is to take the work out of setting up a web app system on a LAMP server, and leave the developer with a starting point to code on from. It also aims to not tie the developers hands in any way, and encourages understanding the lowest level of code. Some frameworks promise to allow you to do code without knowing the code, which arguably disempowers new coders.
 
-# psp.sh Set Up Script
-The psp.sh script also optionally sets up Apache2, MySQL, and php5, and adds the neccesary software and configuration to get a working development set up on the developers machine, or a server. There is a sample database to serve as an example for the curious.
+# Set Up Script psp.sh
+The psp.sh script also optionally sets up Apache2, MySQL, and php5, and adds the neccesary modules/software and configuration to get a working development set up on the developers machine, or a server. There is a sample database to serve as an example for the curious.
 
-# Just running the phpStartPoint script
+# Just running the phpStartPoint.pl script
 You can just run the **phpStartPoint.pl** script in this package. You will need Perl, with the perl DBI, and Term::ReadKey modules i.e. perl-DBI perl-Term-ReadKey on debian based OS, or perl-DBI perl-TermReadKey on a RedHat based distro.
 
 # Building Classes
