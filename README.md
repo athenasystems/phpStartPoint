@@ -24,7 +24,7 @@ This script will examine a MySQL database, and create object oriented PHP classe
 The script queries the MySQL database table e.g. 'select data_type from information_schema.columns', and determines the relevant data type, and creates a php function that will automatically work out the bind_params format to pass to the function. This means you get nice clean functions, and it simplifies the coding later on.
 
 # It's Vanilla Flavoured
-You get a blank slate. The web pages have a very basic Bootstrap CSS setup and almost no design whatsoever. This is deliberate in order that you can apply whatever styling you wish.
+You get a blank slate. The web pages have a very basic Bootstrap CSS setup and almost no design whatsoever. This is deliberate in order that you can wrestle with your own bad taste on that front.
 
 # PHP pages
 The script creates a series of php pages intended to be the basis for a web site that controls the data in the MySQL database. For each table four pages are created:
